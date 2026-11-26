@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>熱力学 予想問題</title>
+<link rel="stylesheet" href="katex/katex.min.css">
+<script defer src="katex/katex.min.js"></script>
+<script defer src="katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']})"></script>
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--text:#1d1d1f;--muted:#5f6368;--line:#d9d9d6;--step:#2f6fd6;--ansbg:#f3f7ff;--box:#fff8e6;--force:#e08a00;
+--ok:#1f8a4c;--okbg:#e8f5ee;--meh:#b26a00;--mehbg:#fff3e0;--ng:#c62828;--ngbg:#fdecea;--k1:#1f8a4c;--k2:#2f6fd6;--k3:#b4489a;--k4:#b26a00}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#141416;--card:#1e1e21;--text:#ececec;--muted:#a3a3a8;--line:#3a3a3f;--step:#79a8ff;--ansbg:#1b2233;--box:#2a2618;--force:#ffb340;
+--ok:#4cc985;--okbg:#173024;--meh:#ffb340;--mehbg:#33260f;--ng:#ff7a6e;--ngbg:#3a1a18;--k1:#4cc985;--k2:#79a8ff;--k3:#e58fd0;--k4:#ffb340}}
+:root[data-theme="dark"]{--bg:#141416;--card:#1e1e21;--text:#ececec;--muted:#a3a3a8;--line:#3a3a3f;--step:#79a8ff;--ansbg:#1b2233;--box:#2a2618;--force:#ffb340;
+--ok:#4cc985;--okbg:#173024;--meh:#ffb340;--mehbg:#33260f;--ng:#ff7a6e;--ngbg:#3a1a18;--k1:#4cc985;--k2:#79a8ff;--k3:#e58fd0;--k4:#ffb340}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;line-height:1.8}
+main{max-width:880px;margin:0 auto;padding:16px 16px 80px}
+h1{font-size:1.4rem;margin:8px 0 4px}
+h2{font-size:1.15rem;margin:32px 0 10px;padding:6px 12px;background:var(--card);border-left:6px solid var(--step)}
+h3{font-size:1rem;margin:20px 0 6px}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.88rem;color:var(--muted);margin:12px 0}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid var(--line)}
+nav.tabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:18px;padding:5px 12px;font-size:.85rem;cursor:pointer;font-family:inherit}
+nav.tabs button.on{background:var(--step);border-color:var(--step);color:#fff}
+nav.tabs .cnt{font-size:.75rem;opacity:.85;margin-left:4px}
+section.tab{display:none} section.tab.on{display:block}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.filters button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:6px;padding:3px 10px;font-size:.82rem;cursor:pointer;font-family:inherit}
+.filters button.on{border-color:var(--step);color:var(--step);font-weight:700}
+.q{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:12px;padding:12px 16px;margin:14px 0}
+.q.st-ok{border-left-color:var(--ok)} .q.st-meh{border-left-color:var(--meh)} .q.st-ng{border-left-color:var(--ng)}
+.qh{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-weight:700;margin-bottom:4px}
+.num{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:26px;border-radius:13px;background:var(--step);color:#fff;font-size:.8rem;padding:0 8px}
+.kind{font-size:.72rem;border:1.5px solid;border-radius:5px;padding:0 6px}
+.kind.k1{color:var(--k1)}.kind.k2{color:var(--k2)}.kind.k3{color:var(--k3)}.kind.k4{color:var(--k4)}
+.ref{font-size:.72rem;font-weight:600;color:var(--muted);background:var(--bg);border-radius:5px;padding:0 6px}
+.ref.star{color:var(--force);background:var(--box)}
+.pri{font-size:.72rem;border-radius:5px;padding:0 7px;color:#fff}.pri.pA{background:var(--ng)}.pri.pB{background:var(--step)}
+details{margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
+summary{cursor:pointer;color:var(--step);font-weight:600;font-size:.9rem;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▶ ";font-size:.8em} details[open] summary::before{content:"▼ "}
+.ans{background:var(--ansbg);border-radius:10px;padding:10px 14px;margin-top:6px}
+.ans h4{margin:10px 0 2px;font-size:.88rem;color:var(--muted)} .ans h4:first-child{margin-top:0}
+.result{background:var(--box);border:2px solid var(--force);border-radius:8px;padding:3px 10px;display:inline-block;margin:2px 0}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.mark{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+.ml{font-size:.8rem;color:var(--muted)}
+.mk{border:1.5px solid var(--line);background:var(--card);color:var(--text);border-radius:16px;padding:2px 12px;font-size:.82rem;cursor:pointer;font-family:inherit}
+.mk[data-v=ok].on{background:var(--okbg);border-color:var(--ok);color:var(--ok);font-weight:700}
+.mk[data-v=meh].on{background:var(--mehbg);border-color:var(--meh);color:var(--meh);font-weight:700}
+.mk[data-v=ng].on{background:var(--ngbg);border-color:var(--ng);color:var(--ng);font-weight:700}
+.memo{display:none;width:100%;font-family:inherit;font-size:.88rem;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--text)}
+.q.st-ng .memo,.q.st-meh .memo{display:block}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border-bottom:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}
+.tablewrap{overflow-x:auto}
+.bar{display:inline-block;height:12px;background:var(--step);border-radius:3px;vertical-align:middle}
+#out{width:100%;min-height:240px;font-family:ui-monospace,Menlo,monospace;font-size:.82rem;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--card);color:var(--text)}
+.btn{border:none;background:var(--step);color:#fff;border-radius:8px;padding:8px 16px;font-size:.9rem;cursor:pointer;font-family:inherit;margin:6px 6px 6px 0}
+.btn.sec{background:var(--card);color:var(--text);border:1px solid var(--line)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 16px;border-radius:8px;font-size:.88rem;display:none;z-index:9}
+.mem{columns:2 320px;column-gap:24px}
+.mem div{break-inside:avoid;margin:0 0 10px}
+.mem b{display:block;font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<nav class="tabs"><button data-t="trend">傾向と暗記</button><button data-t="l1">第1回<span class="cnt"></span></button><button data-t="l2">第2回<span class="cnt"></span></button><button data-t="l3">第3回<span class="cnt"></span></button><button data-t="l4">第4回<span class="cnt"></span></button><button data-t="l5">第5回<span class="cnt"></span></button><button data-t="l6">第6回<span class="cnt"></span></button><button data-t="l7">第7回<span class="cnt"></span></button><button data-t="miss">間違えた問題</button></nav>
+<section class="tab" id="tab-trend">
+<h1>化学熱力学基礎 予想問題</h1>
+<p class="sub">講義 第1〜7回の内容ごとに作った練習問題。過去問3年分(2019、2021 3Q、2021 4Q)で出たところを特に多くしています。全 99 問。</p>
+<div class="note">
+・試験に出そうな35問だけをまとめたページは <a href="../">厳選問題</a> にあります。<br>
+・各問題で「▶ 解答・解説を見る」を開いて答え合わせをし、<b>○ 正解 / △ あやしい / × 間違えた</b> を押してください。記録はこのブラウザに保存されます。<br>
+・×と△には「どこで間違えたか」のメモ欄が出ます。<br>
+・全部終わったら、いちばん右の<b>「間違えた問題」</b>タブで「コピー」を押し、そのまま私(Claude)に貼り付けてください。それをもとに、苦手なところの問題を追加で作ります。<br>
+・<span class="ref star">★ 2019【4】</span> のような印は、その過去問とほぼ同じか、同じ考え方の問題です。<br>
+・<span class="pri pA">優先度 A</span>(22問)は過去問とほぼ同じ問題、<span class="pri pB">優先度 B</span>(13問)はその類題・土台です。各回の「優先度 A」「優先度 A+B」ボタンで絞り込めます。<br>
+・答えと解説は私(Claude)が講義のまとめと過去問をもとに作ったもので、公式のものではありません。
+</div>
+
+<h2>過去問から分かる傾向</h2>
+<p class="sub">3枚の問題用紙(2019年度、2021年度 3Q、2021年度 4Q)の小問28個を数えた結果です。今年の先生・範囲・形式が同じかどうかは分かりません。</p>
+
+<h3>1. 数値計算は0問。全部が文字式</h3>
+<div class="tablewrap"><table>
+<tr><th>問われ方</th><th>小問の数</th><th>例</th></tr>
+<tr><td>「示せ」「導け」(証明)</td><td>11</td><td>dG = −SdT + VdP、マクスウェルの関係式、ギブズ・ヘルムホルツの式</td></tr>
+<tr><td>「求めよ」「表わせ」(文字式で答える)</td><td>16</td><td>等温の仕事 nRT ln(V₁/V₂)、ΔS = R ln(P₁/P₂)、効率 1 − 1/r^(γ−1)</td></tr>
+<tr><td>「説明せよ」</td><td>1</td><td>熱力学第二法則(2019)</td></tr>
+<tr><td>数値計算</td><td>0</td><td>—</td></tr>
+</table></div>
+<p>→ 練習は<b>証明と文字式の導出が中心</b>。このページの数値問題は授業の確認用なので、時間がなければ後回しでよいです。</p>
+
+<h3>2. 回(章)ごとの出題数</h3>
+<div class="tablewrap"><table>
+<tr><th>講義</th><th>過去問の小問数</th><th></th><th>このページの問題数</th></tr>
+<tr><td>第1回(1章 熱力学への準備)</td><td>0</td><td><span class="bar" style="width:0px"></span></td><td>8</td></tr><tr><td>第2回(2章 熱力学第一法則)</td><td>2</td><td><span class="bar" style="width:36px"></span></td><td>10</td></tr><tr><td>第3回(3章 エンタルピー)</td><td>6</td><td><span class="bar" style="width:108px"></span></td><td>16</td></tr><tr><td>第4回(4章 熱力学第二法則)</td><td>2</td><td><span class="bar" style="width:36px"></span></td><td>10</td></tr><tr><td>第5回(5章 エントロピー)</td><td>8</td><td><span class="bar" style="width:144px"></span></td><td>19</td></tr><tr><td>第6回(6章 ギブズエネルギーと化学ポテンシャル)</td><td>9</td><td><span class="bar" style="width:162px"></span></td><td>22</td></tr><tr><td>第7回(7章 熱力学の化学への応用)</td><td>1</td><td><span class="bar" style="width:18px"></span></td><td>14</td></tr>
+</table></div>
+<p>→ <b>第5回(エントロピー)と第6回(G・F・マクスウェル・μ)で半分以上</b>。次に第3回(H、C_P − C_V、断熱変化)。第1回からは直接は出ていません。第7回はギブズ・ヘルムホルツの式の1問だけで、クラペイロンの式や ΔG° = −RT ln K_P は3年分では出ていません(出ないという保証はありません)。</p>
+
+<h3>3. はっきりした傾向</h3>
+<ul>
+<li><b>dG または dF の導出が3年とも出ている。</b>2019【4】(1)、2021 3Q 5(1)、2021 4Q 5(1)。</li>
+<li><b>マクスウェルの関係式</b>(偏微分の順番を入れかえる証明)が2回:2019【4】(2)(G から)、2021 4Q 5(2)(F から)。U・H からのものはまだ出ていない。</li>
+<li><b>同じ問題がそのまま再出題されている。</b>2021年度の 3Q と 4Q は、1(等温準静変化でされた仕事)と 2(H = U + PV の偏微分)が同じ文章。</li>
+<li><b>理想気体のエントロピー変化</b>が毎年:定温・断熱・定圧(2019)、混合と S の式(2021 3Q)、定温 → 断熱(2021 4Q)。</li>
+<li><b>断熱変化</b>(q = 0 → w = −ΔU = C_V(T₁ − T₂)、ポアソンの式)が2回。</li>
+<li><b>化学ポテンシャル</b>は、相平衡(2019)、圧力変化(2021 3Q)、混合気体の状態方程式(2021 4Q)と、毎年形を変えて出ている。</li>
+<li>問題文に「仕事」が出たら、<b>「した仕事」か「された仕事」か</b>を必ず確認(2021 は「された」)。</li>
+</ul>
+
+<h3>4. 証明問題の「型」は4つだけ</h3>
+<div class="tablewrap"><table>
+<tr><th>型</th><th>手順</th><th>使う問題</th></tr>
+<tr><td>A 定義を微分</td><td>定義(H = U + PV など)を微分 → 基本式 dU = TdS − PdV を入れる → TdS などが消える</td><td>dF、dG、dH、H = U + PV の偏微分、C_P − C_V</td></tr>
+<tr><td>B 係数を比べる → 順番を入れかえる</td><td>dG = −SdT + VdP と全微分を比べて (∂G/∂T)_P = −S → もう1回微分して順番を入れかえる</td><td>マクスウェルの関係式、(∂G/∂T)_P = −S</td></tr>
+<tr><td>C G を μ で書く → 少し動かす → dG = 0</td><td>G = Σnμ → 物質を dn 動かす → 平衡では dG = 0</td><td>相平衡 μ_l = μ_g、化学平衡 ΔG° = −RT ln K_P</td></tr>
+<tr><td>D dS = dq/T に入れて積分</td><td>dS = (dU + PdV)/T → 理想気体の dU = C_V dT、P = RT/V → 積分</td><td>S = C_V ln T + R ln V + C、ΔS の各種</td></tr>
+</table></div>
+
+<h2>特に覚えておくもの</h2>
+<p class="sub">これだけは何も見ずに書けるようにしておく、というリスト。ほとんどの証明は、ここから数行で出ます。</p>
+<div class="mem">
+<div><b>定義</b>$H = U + PV$<br>$F = U - TS$<br>$G = H - TS = F + PV$<br>$C_V = (\partial U/\partial T)_V$、$C_P = (\partial H/\partial T)_P$<br>$dS = dq_{\text{rev}}/T$<br>$\mu_i = (\partial G/\partial n_i)_{T,P,n_j}$</div>
+<div><b>基本式 4本(最重要)</b>$dU = T\,dS - P\,dV$<br>$dH = T\,dS + V\,dP$<br>$dF = -S\,dT - P\,dV$<br>$dG = -S\,dT + V\,dP$</div>
+<div><b>第一法則と符号</b>$\Delta U = q - w$(w は系が<b>した</b>仕事)<br>「された仕事」は −w</div>
+<div><b>理想気体</b>U も H も T だけで決まる<br>$C_P - C_V = nR$<br>等温:$w = nRT\ln(V_2/V_1)$、$q = w$<br>断熱:$w = C_V(T_1 - T_2)$、$TV^{\gamma-1}$ = 一定、$PV^\gamma$ = 一定</div>
+<div><b>エントロピー変化(理想気体)</b>等温:$nR\ln(V_2/V_1) = nR\ln(P_1/P_2)$<br>定圧:$C_P\ln(T_2/T_1)$、定積:$C_V\ln(T_2/T_1)$<br>断熱可逆:0<br>混合:$-R\sum n_i\ln x_i$</div>
+<div><b>熱機関</b>$e = 1 - q_2/q_1$<br>カルノー:$e_C = 1 - T_2/T_1$</div>
+<div><b>化学ポテンシャル</b>$\mu = \mu^\circ + RT\ln(P/P^\circ)$<br>相平衡:同じ物質の μ が全部の相で等しい</div>
+<div><b>第7回</b>ギブズ・ヘルムホルツ:$H = -T^2[\partial(G/T)/\partial T]_P$<br>$\Delta G^\circ = -RT\ln K_P$<br>$(\partial\ln K_P/\partial T)_P = \Delta H^\circ/(RT^2)$<br>$d\ln P/dT = \Delta h_{\text{vap}}/(RT^2)$</div>
+<div><b>説明問題で書く文</b>第二法則(トムソン・クラウジウス、4-01)<br>状態量の説明(示量性・示強性まで、1-02)<br>第一法則(2-06)</div>
+</div>
+</section>
+<section class="tab" id="tab-l1">
+<h1>第1回 1章 熱力学への準備</h1>
+<p class="sub">8問。過去問での小問数:0</p>
+<div class="filters"><button class="on" data-f="all">すべて</button><button data-f="pA">優先度 A</button><button data-f="pAB">優先度 A+B</button><button data-f="star">★ 過去問に近い</button><button data-f="証明">証明</button><button data-f="説明">説明</button><button data-f="計算">計算</button><button data-f="基本">基本</button><button data-f="todo">未記録</button><button data-f="bad">× と △</button></div>
+<div class="q" data-id="1-01" data-kind="基本" data-star="0" data-rank="" data-copy="第1回 1-01[基本] 系の3種類:開いた系・閉じた系・孤立系の違いを、「物質」と「エネルギー」の出入りで説明せよ。それぞれ身近な例を1つ挙げよ。">
+<div class="qh"><span class="num">1-01</span><span class="kind k1">基本</span>系の3種類</div>
+<div class="stem">開いた系・閉じた系・孤立系の違いを、「物質」と「エネルギー」の出入りで説明せよ。それぞれ身近な例を1つ挙げよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="tablewrap"><table><tr><th></th><th>物質</th><th>エネルギー(熱・仕事)</th><th>例</th></tr>
+<tr><td>開いた系</td><td>出入りする</td><td>出入りする</td><td>ふたのない鍋の湯</td></tr>
+<tr><td>閉じた系</td><td>出入りしない</td><td>出入りする</td><td>栓をしたフラスコ、ピストン付きシリンダー</td></tr>
+<tr><td>孤立系</td><td>出入りしない</td><td>出入りしない</td><td>理想的な魔法瓶(断熱・密閉)</td></tr></table></div><h4>解説</h4><p>過去問の「断熱」「孤立系」という言葉の前提になる。熱力学の式の多くは閉じた系(物質の出入りなし)で書かれていて、化学ポテンシャル(第6回)で開いた系に広げる。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="1-02" data-kind="説明" data-star="0" data-rank="B" data-copy="第1回 1-02[説明] 状態量とは何か:状態量とは何か、説明せよ。示量性と示強性という言葉を使い、それぞれの例を2つずつ挙げること。">
+<div class="qh"><span class="num">1-02</span><span class="pri pB" title="教科書の書き込みに「期末で状態量の説明が求められたら示量性か示強性かまで書く」とある">優先度 B</span><span class="kind k4">説明</span>状態量とは何か<span class="ref">教科書の書き込み</span></div>
+<div class="stem">状態量とは何か、説明せよ。示量性と示強性という言葉を使い、それぞれの例を2つずつ挙げること。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="result" style="display:block">状態量とは、系が平衡状態にあるとき、その状態だけで値が1つに決まる量である。どのような経路でその状態になったかにはよらない。そのため、状態が変化したときの状態量の変化は最初と最後の状態だけで決まり、一周して元の状態に戻ると変化は 0 になる($\oint dZ = 0$)。<br>
+状態量には、系の大きさ(物質量)に比例する<b>示量性</b>の量(例:体積 V、内部エネルギー U、エンタルピー H、エントロピー S)と、系の大きさによらない<b>示強性</b>の量(例:温度 T、圧力 P、密度、モル体積)がある。</div><h4>解説</h4><p><b>採点ポイント(と思われるもの)</b>:①平衡状態で値が決まる ②経路によらない(最初と最後だけで決まる)③示量性・示強性の区別と例。</p>
+<p>教科書の写真(IMG_0980)に「★期末で状態量の説明が求められたら 示量〜か示強〜か記述!」という手書きのメモがある。③まで書くのが安全。</p>
+<p>熱 q と仕事 w は<b>状態量ではない</b>(経路で値が変わる)ことを対比で書けると、なお良い。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="1-03" data-kind="基本" data-star="0" data-rank="" data-copy="第1回 1-03[基本] 示量性か示強性か:次の量は示量性か示強性か。 / (1) PV (2) n/V (3) U/n (4) H (5) 密度 (6) C_P (7) C_P/n (8) 化学ポテンシャル μ (9) S">
+<div class="qh"><span class="num">1-03</span><span class="kind k1">基本</span>示量性か示強性か</div>
+<div class="stem">次の量は示量性か示強性か。<br>(1) PV (2) n/V (3) U/n (4) H (5) 密度 (6) C_P (7) C_P/n (8) 化学ポテンシャル μ (9) S</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>示量性:(1) PV、(4) H、(6) C_P、(9) S<br>示強性:(2) n/V、(3) U/n、(5) 密度、(7) C_P/n、(8) μ</p><h4>解説</h4><p>考え方:系を「同じものを2つ並べて1つにした」と考え、値が2倍になれば示量性、変わらなければ示強性。</p>
+<ul><li>(1) P は変わらず V は2倍 → PV は2倍。示量性(教科書 例題1.1)。</li>
+<li>(2)(3)(7) 示量性 ÷ 示量性 → 2倍 ÷ 2倍 で変わらない。示強性。</li>
+<li>(8) $\mu = G/n$(純物質)なので示強性。</li></ul></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="1-04" data-kind="計算" data-star="0" data-rank="" data-copy="第1回 1-04[計算] 線積分を2つの経路で計算する:$z = x^2y$ のとき、$dz = 2xy\,dx + x^2\,dy$ である。点 A(0,0) から点 C(1,1) まで、次の2つの経路で $\int dz$ を計算せよ。 / 経路1:A(0,0) → B(1,0) → C(1,1)(折れ線) / 経路2:直線 y = x">
+<div class="qh"><span class="num">1-04</span><span class="kind k2">計算</span>線積分を2つの経路で計算する<span class="ref">章末1.1・1.2</span></div>
+<div class="stem">$z = x^2y$ のとき、$dz = 2xy\,dx + x^2\,dy$ である。点 A(0,0) から点 C(1,1) まで、次の2つの経路で $\int dz$ を計算せよ。<br>
+経路1:A(0,0) → B(1,0) → C(1,1)(折れ線)<br>経路2:直線 y = x</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>どちらも <span class="result">$\int dz = 1$</span>(= z(1,1) − z(0,0))</p><h4>解説</h4><p><b>経路1</b>:A→B は y = 0、dy = 0 なので $\int 2x\cdot 0\,dx = 0$。B→C は x = 1、dx = 0 なので $\int_0^1 1^2\,dy = 1$。合計 1。</p>
+<p><b>経路2</b>:y = x、dy = dx を代入。$\int_0^1 (2x\cdot x + x^2)\,dx = \int_0^1 3x^2\,dx = 1$。</p>
+<p>z は状態量(x, y の関数)なので、経路によらず $z(1,1) - z(0,0) = 1$ になる。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="1-05" data-kind="証明" data-star="0" data-rank="" data-copy="第1回 1-05[証明] 状態量でない量:$dw = y\,dx$ とする。点 (0,0) から (1,1) まで、(1) (1,0) を通る折れ線 (2) (0,1) を通る折れ線 の2つの経路で $\int dw$ を計算し、w が状態量ではないことを示せ。">
+<div class="qh"><span class="num">1-05</span><span class="kind k3">証明</span>状態量でない量</div>
+<div class="stem">$dw = y\,dx$ とする。点 (0,0) から (1,1) まで、(1) (1,0) を通る折れ線 (2) (0,1) を通る折れ線 の2つの経路で $\int dw$ を計算し、w が状態量ではないことを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) 0 (2) 1。経路によって値が違うので、w は状態量ではない。</p><h4>解説</h4><p>(1) (0,0)→(1,0) は y = 0 なので 0。(1,0)→(1,1) は dx = 0 なので 0。合計 0。</p>
+<p>(2) (0,0)→(0,1) は dx = 0 なので 0。(0,1)→(1,1) は y = 1 なので $\int_0^1 dx = 1$。合計 1。</p>
+<p>状態量なら最初と最後だけで値が決まるはず。値が違う → 状態量ではない。仕事 w や熱 q がこのタイプ(第2回)。</p>
+<p>判定法(1-08 で使う):$dw = M\,dx + N\,dy$ で $M = y$、$N = 0$。$\partial M/\partial y = 1 \neq \partial N/\partial x = 0$ なので全微分ではない。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="1-06" data-kind="証明" data-star="0" data-rank="" data-copy="第1回 1-06[証明] ∮dZ = 0 を示す:Z が状態量であるとき、任意の閉じた経路について $\oint dZ = 0$ となることを示せ。">
+<div class="qh"><span class="num">1-06</span><span class="kind k3">証明</span>∮dZ = 0 を示す</div>
+<div class="stem">Z が状態量であるとき、任意の閉じた経路について $\oint dZ = 0$ となることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>閉じた経路を A → B(経路 C₁)と B → A(経路 C₂)に分けると、$\oint dZ = [Z(B) - Z(A)] + [Z(A) - Z(B)] = 0$。</p><h4>解説</h4><p>Z は状態量なので、$\int_{C_1} dZ = Z(B) - Z(A)$(経路 C₁ の形によらない)。同様に $\int_{C_2} dZ = Z(A) - Z(B)$。足すと 0。</p>
+<p>この性質が、第2回(U は状態量 → 一周で ΔU = 0 → w = q)、第4回(カルノーサイクルで $\oint dU = 0$)、第5回($\oint dq_{\text{rev}}/T = 0$)で何度も使われる。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="1-07" data-kind="基本" data-star="0" data-rank="" data-copy="第1回 1-07[基本] 全微分を書く:理想気体の圧力 $P = \dfrac{nRT}{V}$(n 一定)について、dP を dT と dV で表せ。">
+<div class="qh"><span class="num">1-07</span><span class="kind k1">基本</span>全微分を書く</div>
+<div class="stem">理想気体の圧力 $P = \dfrac{nRT}{V}$(n 一定)について、dP を dT と dV で表せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$dP = \dfrac{nR}{V}\,dT - \dfrac{nRT}{V^2}\,dV$</span><h4>解説</h4>$$dP = \left(\frac{\partial P}{\partial T}\right)_V dT + \left(\frac{\partial P}{\partial V}\right)_T dV$$
+<p>$(\partial P/\partial T)_V = nR/V$(V を定数として T で微分)、$(\partial P/\partial V)_T = -nRT/V^2$(T を定数として V で微分)。</p>
+<p>全微分の形「$dZ = (\partial Z/\partial X)_Y dX + (\partial Z/\partial Y)_X dY$」は、第3回・第6回の証明問題で必ず使う。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="1-08" data-kind="証明" data-star="0" data-rank="" data-copy="第1回 1-08[証明] 全微分の条件(偏微分の順番):$dz = M(x,y)\,dx + N(x,y)\,dy$ が、ある関数 $z(x,y)$ の全微分であるとき、$\left(\dfrac{\partial M}{\partial y}\right)_x = \left(\dfrac{\partial N}{\partial x}\right)_y$ が成り立つことを示せ。">
+<div class="qh"><span class="num">1-08</span><span class="kind k3">証明</span>全微分の条件(偏微分の順番)<span class="ref">第6回の土台</span></div>
+<div class="stem">$dz = M(x,y)\,dx + N(x,y)\,dy$ が、ある関数 $z(x,y)$ の全微分であるとき、$\left(\dfrac{\partial M}{\partial y}\right)_x = \left(\dfrac{\partial N}{\partial x}\right)_y$ が成り立つことを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$M = \partial z/\partial x$、$N = \partial z/\partial y$ なので、どちらも $\dfrac{\partial^2 z}{\partial x\,\partial y}$ に等しい。</p><h4>解説</h4><p>全微分 $dz = (\partial z/\partial x)_y dx + (\partial z/\partial y)_x dy$ と比べて $M = (\partial z/\partial x)_y$、$N = (\partial z/\partial y)_x$。</p>
+$$\left(\frac{\partial M}{\partial y}\right)_x = \frac{\partial^2 z}{\partial y\,\partial x},\qquad \left(\frac{\partial N}{\partial x}\right)_y = \frac{\partial^2 z}{\partial x\,\partial y}$$
+<p>z がなめらかな関数なら、偏微分の順番を入れかえても同じなので、等しい。$\blacksquare$</p>
+<p><b>重要</b>:第6回のマクスウェルの関係式は、この性質を U、H、F、G に使っただけ。過去問で2回出ている(2019【4】(2)、2021 4Q 5(2))。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+</section>
+<section class="tab" id="tab-l2">
+<h1>第2回 2章 熱力学第一法則</h1>
+<p class="sub">10問。過去問での小問数:2</p>
+<div class="filters"><button class="on" data-f="all">すべて</button><button data-f="pA">優先度 A</button><button data-f="pAB">優先度 A+B</button><button data-f="star">★ 過去問に近い</button><button data-f="証明">証明</button><button data-f="説明">説明</button><button data-f="計算">計算</button><button data-f="基本">基本</button><button data-f="todo">未記録</button><button data-f="bad">× と △</button></div>
+<div class="q" data-id="2-01" data-kind="基本" data-star="0" data-rank="" data-copy="第2回 2-01[基本] 仕事と熱の符号:この講義の約束($\Delta U = q - w$)で、次の量は正か負か。 / (1) 気体が膨張するときの w (2) 気体が圧縮されるときの w (3) 系が外から熱を受け取るときの q (4) 系が外へ熱を出すときの q">
+<div class="qh"><span class="num">2-01</span><span class="kind k1">基本</span>仕事と熱の符号</div>
+<div class="stem">この講義の約束($\Delta U = q - w$)で、次の量は正か負か。<br>(1) 気体が膨張するときの w (2) 気体が圧縮されるときの w (3) 系が外から熱を受け取るときの q (4) 系が外へ熱を出すときの q</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) 正 (2) 負 (3) 正 (4) 負</p><h4>解説</h4><p>w は「系が外に<b>した</b>仕事」、q は「系が<b>受け取った</b>熱」を正とする。</p>
+<p>過去問(2021 3Q・4Q の 1)は「気体が<b>された</b>仕事」を聞いている。された仕事 = −w。符号を間違えやすいので、答案に「w はされた仕事とする」などと1行書く。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="2-02" data-kind="計算" data-star="1" data-rank="A" data-copy="第2回 2-02[計算] 等温準静変化の仕事(体積):n mol の理想気体を、温度 T 一定で体積 $V_1$ から $V_2$ まで準静的に変化させた。(1) 気体が外界にした仕事 (2) 気体がされた仕事 を求めよ。">
+<div class="qh"><span class="num">2-02</span><span class="pri pA" title="2021年度は3Q・4Qの両方に同じ文章で出た">優先度 A</span><span class="kind k2">計算</span>等温準静変化の仕事(体積)<span class="ref star">★ 2021 3Q-1、2021 4Q-1</span></div>
+<div class="stem">n mol の理想気体を、温度 T 一定で体積 $V_1$ から $V_2$ まで準静的に変化させた。(1) 気体が外界にした仕事 (2) 気体がされた仕事 を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) <span class="result">$nRT\ln\dfrac{V_2}{V_1}$</span> (2) <span class="result">$nRT\ln\dfrac{V_1}{V_2}$</span></p><h4>解説</h4><p>準静的なので外圧 = 気体の圧力 $P = nRT/V$。</p>
+$$w = \int_{V_1}^{V_2}P\,dV = nRT\int_{V_1}^{V_2}\frac{dV}{V} = nRT\ln\frac{V_2}{V_1}$$
+<p>T 一定なので nRT を積分の外に出せる。された仕事はその符号を逆にして $-nRT\ln(V_2/V_1) = nRT\ln(V_1/V_2)$。</p>
+<p>過去問では2年続けて同じ問題が出ている。<b>「準静的 → P = nRT/V を代入 → T 一定で外に出す」の3行を書けるように。</b></p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="2-03" data-kind="計算" data-star="1" data-rank="" data-copy="第2回 2-03[計算] 等温準静変化の仕事(圧力):n mol の理想気体を、温度 T 一定で圧力 $P_1$ から $P_2$ まで準静的に変化させた。気体がされた仕事を P₁、P₂ を使って表せ。">
+<div class="qh"><span class="num">2-03</span><span class="kind k2">計算</span>等温準静変化の仕事(圧力)<span class="ref star">★ 2021 3Q-1 の変形</span></div>
+<div class="stem">n mol の理想気体を、温度 T 一定で圧力 $P_1$ から $P_2$ まで準静的に変化させた。気体がされた仕事を P₁、P₂ を使って表せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$nRT\ln\dfrac{P_2}{P_1}$</span><h4>解説</h4><p>T 一定では $P_1V_1 = P_2V_2$ なので $V_1/V_2 = P_2/P_1$。2-02 の (2) に代入すると $nRT\ln(V_1/V_2) = nRT\ln(P_2/P_1)$。</p>
+<p>確かめ:圧縮(P₂ > P₁)なら正。された仕事として正しい。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="2-04" data-kind="計算" data-star="0" data-rank="" data-copy="第2回 2-04[計算] 準静的でない膨張の仕事:理想気体が、(1) 一定の外圧 $P_e$ に逆らって $V_1$ から $V_2$ まで膨張した (2) 真空中へ $V_1$ から $V_2$ まで膨張した(自由膨張)。それぞれ気体が外にした仕事を求めよ。">
+<div class="qh"><span class="num">2-04</span><span class="kind k2">計算</span>準静的でない膨張の仕事</div>
+<div class="stem">理想気体が、(1) 一定の外圧 $P_e$ に逆らって $V_1$ から $V_2$ まで膨張した (2) 真空中へ $V_1$ から $V_2$ まで膨張した(自由膨張)。それぞれ気体が外にした仕事を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) <span class="result">$P_e(V_2 - V_1)$</span> (2) <span class="result">0</span></p><h4>解説</h4><p>仕事の定義は $dw = P_e\,dV$(P_e は外圧)。(1) P_e 一定なので積分の外に出る。(2) 真空なので P_e = 0。</p>
+<p>注意:$w = \int P\,dV$(P は気体の圧力)と書けるのは<b>準静的なときだけ</b>。準静的でないと、気体の圧力は場所によってばらばらで1つに決まらない。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="2-05" data-kind="計算" data-star="0" data-rank="" data-copy="第2回 2-05[計算] 経路によって仕事が違う:理想気体を状態 A($P_1$, $V_1$)から状態 C($P_2$, $V_2$)へ($P_1 &gt; P_2$、$V_2 &gt; V_1$)、次の2つの経路で準静的に変化させた。それぞれ気体が外にした仕事を求め、q − w について何が言えるか述べよ。 / 経路1:体積 V₁ のまま圧力を P₂ まで下げる → 圧力 P₂ のまま V₂ まで膨張 / 経路2:圧力 P₁ のまま V₂ まで膨張 → 体積 V₂ のまま P₂ まで下げる">
+<div class="qh"><span class="num">2-05</span><span class="kind k2">計算</span>経路によって仕事が違う<span class="ref">章末2.1</span></div>
+<div class="stem">理想気体を状態 A($P_1$, $V_1$)から状態 C($P_2$, $V_2$)へ($P_1 &gt; P_2$、$V_2 &gt; V_1$)、次の2つの経路で準静的に変化させた。それぞれ気体が外にした仕事を求め、q − w について何が言えるか述べよ。<br>
+経路1:体積 V₁ のまま圧力を P₂ まで下げる → 圧力 P₂ のまま V₂ まで膨張<br>経路2:圧力 P₁ のまま V₂ まで膨張 → 体積 V₂ のまま P₂ まで下げる</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>経路1:$P_2(V_2 - V_1)$ 経路2:$P_1(V_2 - V_1)$。w は経路で違うが、q − w(= ΔU)はどちらも同じ。</p><h4>解説</h4><p>定積の部分は dV = 0 なので仕事 0。定圧の部分だけ $P\,\Delta V$。P₁ > P₂ なので経路2のほうが仕事が大きい(P–V 図で下の面積が大きい)。</p>
+<p>q も経路で違うが、差 q − w は最初と最後だけで決まる(実験事実)。これが第一法則で、$q - w = \Delta U$ が状態量の変化になる。</p>
+<p>(章末2.1の解答は「−P₂(V₂−V₁)、−P₁(V₂−V₁)」と、された仕事の符号で書いてある。)</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="2-06" data-kind="説明" data-star="0" data-rank="" data-copy="第2回 2-06[説明] 熱力学第一法則を説明する:熱力学第一法則を、式と言葉で説明せよ。">
+<div class="qh"><span class="num">2-06</span><span class="kind k4">説明</span>熱力学第一法則を説明する</div>
+<div class="stem">熱力学第一法則を、式と言葉で説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="result" style="display:block">閉じた系が受け取る熱を q、系が外にする仕事を w とすると、$\Delta U = q - w$(微小変化では $dU = dq - dw$)が成り立つ。q と w はそれぞれ経路によって値が変わるが、その差 q − w は最初と最後の状態だけで決まる。この差を内部エネルギー U の変化と定義する。U は状態量である。これはエネルギー保存の法則を熱まで含めて表したもので、外からエネルギーを受け取らずに仕事をし続ける機関(第一種永久機関)は作れないことを意味する。</div><h4>解説</h4><p><b>採点ポイント(と思われるもの)</b>:①式と、q・w の符号の意味 ②U は状態量、q・w は状態量ではない ③エネルギー保存。</p>
+<p>過去問で出た説明問題は第二法則(2019【6】)。第一法則も同じ形で出る可能性がある(推測)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="2-07" data-kind="証明" data-star="0" data-rank="" data-copy="第2回 2-07[証明] 循環過程では w = q:系がある状態から出発して、いくつかの変化を経て元の状態に戻った(循環過程)。この間に系が受け取った熱 q と、外にした仕事 w が等しいことを示せ。">
+<div class="qh"><span class="num">2-07</span><span class="kind k3">証明</span>循環過程では w = q</div>
+<div class="stem">系がある状態から出発して、いくつかの変化を経て元の状態に戻った(循環過程)。この間に系が受け取った熱 q と、外にした仕事 w が等しいことを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>U は状態量なので一周で $\Delta U = \oint dU = 0$。第一法則 $\Delta U = q - w$ より $0 = q - w$、よって $w = q$。</p><h4>解説</h4><p>使うのは「U は状態量 → 一周で 0(1-06)」と「第一法則」だけ。</p>
+<p>意味:一周して戻る機関(熱機関)が外にした仕事は、受け取った熱(正味)と等しい。熱を受け取らずに仕事だけ出すことはできない。第4回のカルノーサイクル、2021 4Q の 3(3) で使う。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="2-08" data-kind="説明" data-star="0" data-rank="" data-copy="第2回 2-08[説明] ジュールの実験と理想気体の U:ジュールの実験(理想気体の真空への自由膨張)から、理想気体の内部エネルギーが温度だけで決まる(U = U(T))ことを説明せよ。">
+<div class="qh"><span class="num">2-08</span><span class="kind k4">説明</span>ジュールの実験と理想気体の U</div>
+<div class="stem">ジュールの実験(理想気体の真空への自由膨張)から、理想気体の内部エネルギーが温度だけで決まる(U = U(T))ことを説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="result" style="display:block">断熱した容器の中で、理想気体を真空へ自由膨張させると、温度は変わらなかった。断熱なので q = 0、真空へ膨張するので外圧 0 で w = 0。第一法則より ΔU = q − w = 0。体積と圧力は変わったのに、温度も U も変わらない。最初と最後の体積・圧力をどう選んでも同じなので、理想気体の U は V や P によらず、T だけで決まる。</div><h4>解説</h4><p>ポイント:「q = 0」「w = 0」「T 不変」→「ΔU = 0」→「V が変わっても U 不変」→「U = U(T)」の順。</p>
+<p>この結果 $(\partial U/\partial V)_T = 0$ は、3-06 → 3-07(C_P − C_V = nR)や、断熱変化の $dU = C_V dT$ で使う。第6回の 6-09 では、熱力学の式からも導ける。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="2-09" data-kind="計算" data-star="0" data-rank="" data-copy="第2回 2-09[計算] 等温準静膨張で吸収する熱:n mol の理想気体を、温度 T 一定で $V_1$ から $V_2$ まで準静的に膨張させた。気体が吸収した熱 q と ΔU を求めよ。">
+<div class="qh"><span class="num">2-09</span><span class="kind k2">計算</span>等温準静膨張で吸収する熱</div>
+<div class="stem">n mol の理想気体を、温度 T 一定で $V_1$ から $V_2$ まで準静的に膨張させた。気体が吸収した熱 q と ΔU を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$\Delta U = 0$、<span class="result">$q = nRT\ln\dfrac{V_2}{V_1}$</span></p><h4>解説</h4><p>理想気体の U は T だけで決まり(2-08)、T 一定なので ΔU = 0。第一法則より q = w = $nRT\ln(V_2/V_1)$(2-02)。</p>
+<p>この q を T で割ると、第5回の等温変化のエントロピー変化 $\Delta S = nR\ln(V_2/V_1)$ になる(2019【3】(1))。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="2-10" data-kind="説明" data-star="0" data-rank="" data-copy="第2回 2-10[説明] 準静変化とは:準静変化(準静的過程)とは何か説明せよ。また、仕事を $w = \int P\,dV$(P は系の圧力)と書けるのはなぜ準静変化のときだけか述べよ。">
+<div class="qh"><span class="num">2-10</span><span class="kind k4">説明</span>準静変化とは</div>
+<div class="stem">準静変化(準静的過程)とは何か説明せよ。また、仕事を $w = \int P\,dV$(P は系の圧力)と書けるのはなぜ準静変化のときだけか述べよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="result" style="display:block">準静変化とは、系が常に平衡状態を保ちながら、限りなくゆっくり進む変化である。途中のどの瞬間でも系は平衡状態にあるので、圧力や温度が1つの値に決まり、外圧と系の圧力は等しい。仕事の定義は $dw = P_e\,dV$(外圧)だが、準静変化では $P_e = P$ と置きかえられる。準静的でない変化では、系の中で圧力が一様でなく P が決まらないので、系の圧力を使って書けない。</div><h4>解説</h4><p>第4回で「準静的過程は可逆」とつながる。過去問の問題文に「準静的に」と書いてあるときは、$P = nRT/V$ を代入してよい合図。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+</section>
+<section class="tab" id="tab-l3">
+<h1>第3回 3章 エンタルピー</h1>
+<p class="sub">16問。過去問での小問数:6</p>
+<div class="filters"><button class="on" data-f="all">すべて</button><button data-f="pA">優先度 A</button><button data-f="pAB">優先度 A+B</button><button data-f="star">★ 過去問に近い</button><button data-f="証明">証明</button><button data-f="説明">説明</button><button data-f="計算">計算</button><button data-f="基本">基本</button><button data-f="todo">未記録</button><button data-f="bad">× と △</button></div>
+<div class="q" data-id="3-01" data-kind="証明" data-star="0" data-rank="" data-copy="第3回 3-01[証明] 定圧では出入りする熱 = ΔH:閉じた系が圧力 P 一定のもとで変化し(PV 仕事だけをする)、熱 $q_P$ を吸収した。$q_P = \Delta H$ を示せ。ただし $H = U + PV$。">
+<div class="qh"><span class="num">3-01</span><span class="kind k3">証明</span>定圧では出入りする熱 = ΔH</div>
+<div class="stem">閉じた系が圧力 P 一定のもとで変化し(PV 仕事だけをする)、熱 $q_P$ を吸収した。$q_P = \Delta H$ を示せ。ただし $H = U + PV$。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$q_P = \Delta U + P\Delta V = \Delta(U + PV) = \Delta H$</p><h4>解説</h4><p>P 一定なので $w = \int P\,dV = P(V_2 - V_1) = P\Delta V$。第一法則より $q_P = \Delta U + w = \Delta U + P\Delta V$。</p>
+<p>P 一定なので $\Delta(PV) = P\Delta V$。よって $q_P = \Delta U + \Delta(PV) = \Delta(U + PV) = \Delta H$。$\blacksquare$</p>
+<p>同じように、定積なら w = 0 なので $q_V = \Delta U$。化学反応はふつう大気圧(定圧)で行うので、反応熱を ΔH で表す。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-02" data-kind="計算" data-star="0" data-rank="" data-copy="第3回 3-02[計算] ΔH と ΔU の差:298 K、定圧で次の反応の ΔH は −890 kJ である。ΔU を求めよ。気体は理想気体、液体の体積は無視できるとし、R = 8.31 J/(K·mol)。 / $\mathrm{CH_4(g) + 2O_2(g) \to CO_2(g) + 2H_2O(l)}$">
+<div class="qh"><span class="num">3-02</span><span class="kind k2">計算</span>ΔH と ΔU の差<span class="ref">章末3.1 の考え方</span></div>
+<div class="stem">298 K、定圧で次の反応の ΔH は −890 kJ である。ΔU を求めよ。気体は理想気体、液体の体積は無視できるとし、R = 8.31 J/(K·mol)。<br>$\mathrm{CH_4(g) + 2O_2(g) \to CO_2(g) + 2H_2O(l)}$</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$\Delta U \approx -885\ \text{kJ}$</span><h4>解説</h4><p>$\Delta H = \Delta U + \Delta(PV)$。気体だけ考えて $\Delta(PV) = \Delta n_{\text{gas}}RT$。</p>
+<p>$\Delta n_{\text{gas}} = 1 - (1 + 2) = -2$ mol。$\Delta(PV) = -2 \times 8.31 \times 298 = -4953\ \text{J} \approx -4.95$ kJ。</p>
+<p>$\Delta U = \Delta H - \Delta n_{\text{gas}}RT = -890 + 4.95 \approx -885$ kJ。</p>
+<p>過去問に数値計算はなかった(下の「傾向」参照)。ここは授業内容の確認用。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-03" data-kind="計算" data-star="0" data-rank="" data-copy="第3回 3-03[計算] 標準生成エンタルピーから反応熱:標準生成エンタルピー(kJ/mol)を CH₄(g) −74.8、CO₂(g) −393.5、H₂O(l) −285.8 とする。3-02 の反応の ΔH° を求めよ。">
+<div class="qh"><span class="num">3-03</span><span class="kind k2">計算</span>標準生成エンタルピーから反応熱</div>
+<div class="stem">標準生成エンタルピー(kJ/mol)を CH₄(g) −74.8、CO₂(g) −393.5、H₂O(l) −285.8 とする。3-02 の反応の ΔH° を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$\Delta H^\circ = -890.3\ \text{kJ}$</span><h4>解説</h4><p>$\Delta H^\circ = \sum(\text{生成系}) - \sum(\text{反応系})$。O₂ は安定な単体なので 0。</p>
+<p>$= [-393.5 + 2(-285.8)] - [-74.8 + 0] = -965.1 + 74.8 = -890.3$ kJ。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-04" data-kind="基本" data-star="0" data-rank="" data-copy="第3回 3-04[基本] C_V と C_P の定義:定積熱容量 $C_V$ と定圧熱容量 $C_P$ を、偏微分を使って定義せよ。また、気体で $C_P &gt; C_V$ となる理由を言葉で説明せよ。">
+<div class="qh"><span class="num">3-04</span><span class="kind k1">基本</span>C_V と C_P の定義</div>
+<div class="stem">定積熱容量 $C_V$ と定圧熱容量 $C_P$ を、偏微分を使って定義せよ。また、気体で $C_P &gt; C_V$ となる理由を言葉で説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p><span class="result">$C_V = \left(\dfrac{\partial U}{\partial T}\right)_V$、 $C_P = \left(\dfrac{\partial H}{\partial T}\right)_P$</span></p><h4>解説</h4><p>定積では仕事をしないので、受け取った熱はすべて U の増加(温度上昇)に使われる。定圧では温度が上がると膨張して外に仕事をするので、同じだけ温度を上げるのに余分な熱が要る。だから $C_P &gt; C_V$。</p>
+<p>2021 3Q の 3 では、これを S を使って $C_V = T(\partial S/\partial T)_V$ と書き直す問題が出た(5-18)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-05" data-kind="証明" data-star="1" data-rank="A" data-copy="第3回 3-05[証明] C_P と C_V の一般的な関係:次の関係が成り立つことを示せ。$$C_P = C_V + \left\{\left(\frac{\partial U}{\partial V}\right)_T + P\right\}\left(\frac{\partial V}{\partial T}\right)_P$$">
+<div class="qh"><span class="num">3-05</span><span class="pri pA" title="2019【1】そのまま">優先度 A</span><span class="kind k3">証明</span>C_P と C_V の一般的な関係<span class="ref star">★ 2019【1】</span></div>
+<div class="stem">次の関係が成り立つことを示せ。$$C_P = C_V + \left\{\left(\frac{\partial U}{\partial V}\right)_T + P\right\}\left(\frac{\partial V}{\partial T}\right)_P$$</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>①$C_P$ を H = U + PV で書く ②U(T, V) を全微分して P 一定で dT で割る ③代入する。</p><h4>解説</h4><p><b>①</b> $C_P = \left(\dfrac{\partial H}{\partial T}\right)_P = \left(\dfrac{\partial U}{\partial T}\right)_P + P\left(\dfrac{\partial V}{\partial T}\right)_P$</p>
+<p><b>②</b> $dU = C_V\,dT + \left(\dfrac{\partial U}{\partial V}\right)_T dV$ を、P 一定で dT で割る:</p>
+$$\left(\frac{\partial U}{\partial T}\right)_P = C_V + \left(\frac{\partial U}{\partial V}\right)_T\left(\frac{\partial V}{\partial T}\right)_P$$
+<p><b>③</b> ②を①に入れて $\left(\dfrac{\partial V}{\partial T}\right)_P$ でくくると、示す式になる。$\blacksquare$</p>
+<p>つまずきやすいところ:②で「P 一定で dT で割る」と $(\partial U/\partial T)_P$ が出る。$(\partial U/\partial T)_V = C_V$ と混同しない。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-06" data-kind="証明" data-star="1" data-rank="B" data-copy="第3回 3-06[証明] 理想気体では C_P − C_V = nR:3-05 の式を使って、n mol の理想気体では $C_P - C_V = nR$ となることを示せ。">
+<div class="qh"><span class="num">3-06</span><span class="pri pB" title="2019【1】の続き。3-05 の結果に理想気体を入れるだけ">優先度 B</span><span class="kind k3">証明</span>理想気体では C_P − C_V = nR<span class="ref star">★ 2019【1】の続き</span></div>
+<div class="stem">3-05 の式を使って、n mol の理想気体では $C_P - C_V = nR$ となることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$(\partial U/\partial V)_T = 0$、$(\partial V/\partial T)_P = nR/P$ を代入すると $C_P - C_V = P\cdot nR/P = nR$。</p><h4>解説</h4><p>理想気体の U は T だけで決まる(ジュールの法則、2-08)ので $(\partial U/\partial V)_T = 0$。$V = nRT/P$ より $(\partial V/\partial T)_P = nR/P$。</p>
+$$C_P - C_V = \{0 + P\}\cdot\frac{nR}{P} = nR\qquad\blacksquare$$
+<p>1 mol ならマイヤーの関係式 $C_P - C_V = R$。固体・液体では $(\partial V/\partial T)_P$ がとても小さいので $C_P \approx C_V$。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-07" data-kind="証明" data-star="1" data-rank="A" data-copy="第3回 3-07[証明] U と H の偏微分(P で微分):次の式が成り立つことを示せ。$$\left(\frac{\partial U}{\partial P}\right)_T + P\left(\frac{\partial V}{\partial P}\right)_T = \left(\frac{\partial H}{\partial P}\right)_T - V$$">
+<div class="qh"><span class="num">3-07</span><span class="pri pA" title="2021年度は3Q・4Qの両方に同じ文章で出た">優先度 A</span><span class="kind k3">証明</span>U と H の偏微分(P で微分)<span class="ref star">★ 2021 3Q-2、2021 4Q-2</span></div>
+<div class="stem">次の式が成り立つことを示せ。$$\left(\frac{\partial U}{\partial P}\right)_T + P\left(\frac{\partial V}{\partial P}\right)_T = \left(\frac{\partial H}{\partial P}\right)_T - V$$</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$H = U + PV$ を T 一定で P について偏微分する。</p><h4>解説</h4>$$\left(\frac{\partial H}{\partial P}\right)_T = \left(\frac{\partial U}{\partial P}\right)_T + V + P\left(\frac{\partial V}{\partial P}\right)_T$$
+<p>($PV$ の P 微分は積の微分で $V + P\,\partial V/\partial P$。)両辺から V を引けば示す式。$\blacksquare$</p>
+<p>2021年は 3Q・4Q の両方で出た。「H = U + PV を、聞かれている変数で偏微分」が型。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-08" data-kind="証明" data-star="1" data-rank="B" data-copy="第3回 3-08[証明] U と H の偏微分(T で微分、V 一定):次の式が成り立つことを示せ。$$\left(\frac{\partial H}{\partial T}\right)_V = C_V + V\left(\frac{\partial P}{\partial T}\right)_V$$">
+<div class="qh"><span class="num">3-08</span><span class="pri pB" title="3-07 の変数を変えた形。同じ手順で解ける">優先度 B</span><span class="kind k3">証明</span>U と H の偏微分(T で微分、V 一定)<span class="ref star">★ 2021 3Q-2 の変形</span></div>
+<div class="stem">次の式が成り立つことを示せ。$$\left(\frac{\partial H}{\partial T}\right)_V = C_V + V\left(\frac{\partial P}{\partial T}\right)_V$$</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$H = U + PV$ を V 一定で T について偏微分する。</p><h4>解説</h4>$$\left(\frac{\partial H}{\partial T}\right)_V = \left(\frac{\partial U}{\partial T}\right)_V + \left(\frac{\partial (PV)}{\partial T}\right)_V = C_V + V\left(\frac{\partial P}{\partial T}\right)_V\qquad\blacksquare$$
+<p>V 一定なので PV の微分は $V\,\partial P/\partial T$ だけ(V は定数として外に出る)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-09" data-kind="証明" data-star="0" data-rank="" data-copy="第3回 3-09[証明] U と H の偏微分(V で微分):次の式が成り立つことを示せ。$$\left(\frac{\partial H}{\partial V}\right)_T - \left(\frac{\partial U}{\partial V}\right)_T = P + V\left(\frac{\partial P}{\partial V}\right)_T$$また、理想気体ではこの値がいくらになるか答えよ。">
+<div class="qh"><span class="num">3-09</span><span class="kind k3">証明</span>U と H の偏微分(V で微分)<span class="ref">3-07 の変形</span></div>
+<div class="stem">次の式が成り立つことを示せ。$$\left(\frac{\partial H}{\partial V}\right)_T - \left(\frac{\partial U}{\partial V}\right)_T = P + V\left(\frac{\partial P}{\partial V}\right)_T$$また、理想気体ではこの値がいくらになるか答えよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>H = U + PV を T 一定で V で偏微分。理想気体では <span class="result">0</span>。</p><h4>解説</h4>$$\left(\frac{\partial H}{\partial V}\right)_T = \left(\frac{\partial U}{\partial V}\right)_T + P + V\left(\frac{\partial P}{\partial V}\right)_T$$
+<p>移項すれば示す式。理想気体では T 一定で PV = nRT = 一定なので $(\partial(PV)/\partial V)_T = 0$。つまり $P + V(\partial P/\partial V)_T = P + V\cdot(-nRT/V^2) = P - P = 0$。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-10" data-kind="証明" data-star="0" data-rank="" data-copy="第3回 3-10[証明] 理想気体の H は温度だけで決まる:理想気体では $\left(\dfrac{\partial H}{\partial P}\right)_T = 0$ であることを示せ。">
+<div class="qh"><span class="num">3-10</span><span class="kind k3">証明</span>理想気体の H は温度だけで決まる</div>
+<div class="stem">理想気体では $\left(\dfrac{\partial H}{\partial P}\right)_T = 0$ であることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$H = U(T) + nRT$ は T だけの関数なので、T 一定で P を変えても変わらない。</p><h4>解説</h4><p>理想気体では U は T だけで決まり(ジュールの法則)、$PV = nRT$。よって $H = U + PV = U(T) + nRT$ も T だけの関数。$\blacksquare$</p>
+<p>別解:3-07 の式に $(\partial U/\partial P)_T = 0$、$P(\partial V/\partial P)_T = P\cdot(-nRT/P^2) = -V$ を入れると $(\partial H/\partial P)_T = -V + V = 0$。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-11" data-kind="計算" data-star="1" data-rank="A" data-copy="第3回 3-11[計算] 断熱準静変化の仕事:n mol の理想気体を準静的に断熱変化させ、温度が $T_1$ から $T_2$ に変わった。$C_V$(気体全体の定積熱容量、温度によらない)を使って、(1) 気体が外にした仕事 (2) 気体がされた仕事 を表せ。">
+<div class="qh"><span class="num">3-11</span><span class="pri pA" title="2019【2】と 2021 4Q-3(1)。2回出ている">優先度 A</span><span class="kind k2">計算</span>断熱準静変化の仕事<span class="ref star">★ 2019【2】、2021 4Q-3(1)</span></div>
+<div class="stem">n mol の理想気体を準静的に断熱変化させ、温度が $T_1$ から $T_2$ に変わった。$C_V$(気体全体の定積熱容量、温度によらない)を使って、(1) 気体が外にした仕事 (2) 気体がされた仕事 を表せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) <span class="result">$C_V(T_1 - T_2)$</span> (2) <span class="result">$C_V(T_2 - T_1)$</span></p><h4>解説</h4><p>断熱なので q = 0。第一法則 $\Delta U = q - w$ より $w = -\Delta U$。理想気体では $dU = C_V\,dT$ なので $\Delta U = C_V(T_2 - T_1)$。</p>
+<p>(1) $w = -C_V(T_2 - T_1) = C_V(T_1 - T_2)$ (2) その符号を逆にする。</p>
+<p><b>過去問で2回出た。</b>「断熱 → q = 0 → w = −ΔU → ΔU = C_VΔT」の流れ。章末3.2 にも同じ結果がある。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-12" data-kind="証明" data-star="1" data-rank="A" data-copy="第3回 3-12[証明] ポアソンの式 TV^(γ−1) = 一定:理想気体の準静的断熱変化で、$TV^{\gamma - 1} = $ 一定 となることを示せ。ただし $\gamma = C_P/C_V$、$C_V$ は温度によらない。">
+<div class="qh"><span class="num">3-12</span><span class="pri pA" title="2021 4Q-3(2)">優先度 A</span><span class="kind k3">証明</span>ポアソンの式 TV^(γ−1) = 一定<span class="ref star">★ 2021 4Q-3(2)</span></div>
+<div class="stem">理想気体の準静的断熱変化で、$TV^{\gamma - 1} = $ 一定 となることを示せ。ただし $\gamma = C_P/C_V$、$C_V$ は温度によらない。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$C_V\,dT = -P\,dV = -\dfrac{nRT}{V}dV$ を変数分離して積分する。</p><h4>解説</h4><p>断熱なので dq = 0。第一法則 $dU = -dw = -P\,dV$(準静的)。理想気体では $dU = C_V\,dT$、$P = nRT/V$。</p>
+$$C_V\,dT = -\frac{nRT}{V}dV\quad\Longrightarrow\quad \frac{dT}{T} = -\frac{nR}{C_V}\frac{dV}{V}$$
+<p>$nR = C_P - C_V$ なので $nR/C_V = \gamma - 1$。両辺を積分すると</p>
+$$\ln T = -(\gamma - 1)\ln V + \text{const}\quad\Longrightarrow\quad TV^{\gamma - 1} = \text{一定}\qquad\blacksquare$$
+<p>2021 4Q では、これを A→B と C→D に使って $T_AV_A^{\gamma-1} = T_BV_B^{\gamma-1}$ などを書く問題だった。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-13" data-kind="証明" data-star="0" data-rank="" data-copy="第3回 3-13[証明] ポアソンの式 PV^γ = 一定 と T・P の関係:3-12 の $TV^{\gamma-1} = $ 一定 から、(1) $PV^\gamma = $ 一定 (2) $T^\gamma P^{1-\gamma} = $ 一定 を導け。">
+<div class="qh"><span class="num">3-13</span><span class="kind k3">証明</span>ポアソンの式 PV^γ = 一定 と T・P の関係</div>
+<div class="stem">3-12 の $TV^{\gamma-1} = $ 一定 から、(1) $PV^\gamma = $ 一定 (2) $T^\gamma P^{1-\gamma} = $ 一定 を導け。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) $T = PV/(nR)$ を代入 (2) $V = nRT/P$ を代入。</p><h4>解説</h4><p>(1) $TV^{\gamma-1} = \dfrac{PV}{nR}V^{\gamma-1} = \dfrac{PV^\gamma}{nR}$。nR は定数なので $PV^\gamma$ = 一定。</p>
+<p>(2) $PV^\gamma$ に $V = nRT/P$ を入れると $P\cdot\dfrac{(nRT)^\gamma}{P^\gamma} = (nR)^\gamma T^\gamma P^{1-\gamma}$。よって $T^\gamma P^{1-\gamma}$ = 一定。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-14" data-kind="計算" data-star="1" data-rank="" data-copy="第3回 3-14[計算] PV^γ を積分して断熱の仕事を出す:理想気体を準静的に断熱膨張させ、($P_1$, $V_1$, $T_1$)から($P_2$, $V_2$, $T_2$)になった。$PV^\gamma = $ 一定 を使って $w = \int P\,dV$ を計算し、$w = \dfrac{P_1V_1 - P_2V_2}{\gamma - 1} = C_V(T_1 - T_2)$ となることを示せ。">
+<div class="qh"><span class="num">3-14</span><span class="kind k2">計算</span>PV^γ を積分して断熱の仕事を出す<span class="ref star">★ 2019【2】の別解</span></div>
+<div class="stem">理想気体を準静的に断熱膨張させ、($P_1$, $V_1$, $T_1$)から($P_2$, $V_2$, $T_2$)になった。$PV^\gamma = $ 一定 を使って $w = \int P\,dV$ を計算し、$w = \dfrac{P_1V_1 - P_2V_2}{\gamma - 1} = C_V(T_1 - T_2)$ となることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$P = KV^{-\gamma}$($K = P_1V_1^\gamma = P_2V_2^\gamma$)を積分する。</p><h4>解説</h4>$$w = \int_{V_1}^{V_2}KV^{-\gamma}dV = \frac{K}{1-\gamma}\left(V_2^{1-\gamma} - V_1^{1-\gamma}\right) = \frac{KV_1^{1-\gamma} - KV_2^{1-\gamma}}{\gamma - 1}$$
+<p>$KV_1^{1-\gamma} = P_1V_1^\gamma V_1^{1-\gamma} = P_1V_1$、同様に $KV_2^{1-\gamma} = P_2V_2$。よって $w = \dfrac{P_1V_1 - P_2V_2}{\gamma - 1}$。</p>
+<p>$PV = nRT$ と $\gamma - 1 = nR/C_V$ を入れると $w = \dfrac{nR(T_1 - T_2)}{nR/C_V} = C_V(T_1 - T_2)$。3-11 と一致する。$\blacksquare$</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-15" data-kind="説明" data-star="0" data-rank="" data-copy="第3回 3-15[説明] 等温線と断熱線の傾き:理想気体の P–V 図で、同じ点を通る等温線と断熱線(準静的)では、どちらの傾きが急か。理由を式で示せ。">
+<div class="qh"><span class="num">3-15</span><span class="kind k4">説明</span>等温線と断熱線の傾き</div>
+<div class="stem">理想気体の P–V 図で、同じ点を通る等温線と断熱線(準静的)では、どちらの傾きが急か。理由を式で示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p><b>断熱線のほうが急</b>(傾きが γ 倍)。</p><h4>解説</h4><p>等温:$PV$ = 一定 → $\dfrac{dP}{dV} = -\dfrac{P}{V}$。 断熱:$PV^\gamma$ = 一定 → $\dfrac{dP}{dV} = -\gamma\dfrac{P}{V}$。</p>
+<p>γ > 1 なので断熱線のほうが急。言葉で:断熱膨張では外に仕事をした分だけ温度も下がるので、等温膨張より圧力が大きく下がる。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="3-16" data-kind="説明" data-star="0" data-rank="" data-copy="第3回 3-16[説明] 等温膨張と断熱膨張の仕事の比較:同じ理想気体を、同じ状態($P_1$, $V_1$)から同じ体積 $V_2$ まで、(a) 等温準静的に (b) 断熱準静的に 膨張させた。気体が外にした仕事はどちらが大きいか。P–V 図を使って説明せよ。">
+<div class="qh"><span class="num">3-16</span><span class="kind k4">説明</span>等温膨張と断熱膨張の仕事の比較</div>
+<div class="stem">同じ理想気体を、同じ状態($P_1$, $V_1$)から同じ体積 $V_2$ まで、(a) 等温準静的に (b) 断熱準静的に 膨張させた。気体が外にした仕事はどちらが大きいか。P–V 図を使って説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p><b>(a) 等温膨張</b>のほうが大きい。</p><h4>解説</h4><p>仕事は P–V 図の曲線の下の面積。3-15 より、膨張していくと断熱線は等温線より下を通る(圧力の下がり方が大きい)。同じ V₁ → V₂ で比べると、等温線の下の面積のほうが大きい。</p>
+<p>エネルギーで見ると:等温では外から熱をもらいながら仕事をする。断熱では熱をもらえず、自分の U を減らして仕事をするので温度も下がる。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+</section>
+<section class="tab" id="tab-l4">
+<h1>第4回 4章 熱力学第二法則</h1>
+<p class="sub">10問。過去問での小問数:2</p>
+<div class="filters"><button class="on" data-f="all">すべて</button><button data-f="pA">優先度 A</button><button data-f="pAB">優先度 A+B</button><button data-f="star">★ 過去問に近い</button><button data-f="証明">証明</button><button data-f="説明">説明</button><button data-f="計算">計算</button><button data-f="基本">基本</button><button data-f="todo">未記録</button><button data-f="bad">× と △</button></div>
+<div class="q" data-id="4-01" data-kind="説明" data-star="1" data-rank="A" data-copy="第4回 4-01[説明] 熱力学第二法則を説明する:熱力学第二法則を説明せよ。">
+<div class="qh"><span class="num">4-01</span><span class="pri pA" title="2019【6】。3年分で唯一の「説明せよ」">優先度 A</span><span class="kind k4">説明</span>熱力学第二法則を説明する<span class="ref star">★ 2019【6】</span></div>
+<div class="stem">熱力学第二法則を説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="result" style="display:block">熱力学第二法則は、自然に起こる変化には向きがあることを表す法則である。<br>
+・トムソンの原理:一つの熱源から熱を受け取り、それをすべて仕事に変え、ほかに何の変化も残さないような循環過程は存在しない(第二種永久機関は作れない)。<br>
+・クラウジウスの原理:ほかに何の変化も残さずに、低温の物体から高温の物体へ熱を移すことはできない。<br>
+この2つの原理は同等である。エントロピーを使うと、孤立系で起こる変化ではエントロピーは減少しない($\Delta S \geq 0$、等号は可逆変化)とも表せる。</div><h4>解説</h4><p><b>採点ポイント(と思われるもの)</b>:①原理を正確に(「ほかに何の変化も残さずに」「循環過程」が大事)②2つが同等 ③エントロピー増大や熱機関の効率 &lt; 1 とのつながり。</p>
+<p>過去問で唯一の説明問題(2019【6】)。<b>自分の言葉で、紙を見ずに3〜5行で書けるように</b>しておく。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="4-02" data-kind="証明" data-star="0" data-rank="" data-copy="第4回 4-02[証明] トムソンの原理とクラウジウスの原理の同等性:「クラウジウスの原理が成り立たなければ、トムソンの原理も成り立たない」ことを、カルノーサイクルを組み合わせて示せ。">
+<div class="qh"><span class="num">4-02</span><span class="kind k3">証明</span>トムソンの原理とクラウジウスの原理の同等性<span class="ref">章末4.1</span></div>
+<div class="stem">「クラウジウスの原理が成り立たなければ、トムソンの原理も成り立たない」ことを、カルノーサイクルを組み合わせて示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>低温→高温へ勝手に熱を移す装置と、カルノーサイクルを組み合わせると、高温熱源1つから熱を取って全部仕事にする機関ができてしまう。</p><h4>解説</h4><p>クラウジウスの原理が破れて、低温熱源(T₂)から高温熱源(T₁)へ、ほかに変化を残さずに熱 q₂ を移せたとする。</p>
+<p>同時に、カルノーサイクルを1回まわす:高温から q₁ を吸収し、仕事 $w = q_1 - q_2$ をして、低温に q₂ を捨てる。</p>
+<p>全体で見ると、低温熱源の出入りは +q₂ − q₂ = 0 で打ち消される。残るのは「高温熱源から $q_1 - q_2$ を受け取り、それをすべて仕事 w にした」ことだけ。これはトムソンの原理に反する。$\blacksquare$</p>
+<p>逆向き(トムソンが破れる → クラウジウスも破れる)は、熱を全部仕事にする機関の仕事で逆カルノーサイクル(冷凍機)を動かし、低温から高温へ熱を移すことで示す。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="4-03" data-kind="基本" data-star="0" data-rank="" data-copy="第4回 4-03[基本] 熱機関の効率:高温熱源から熱 q₁ を受け取り、低温熱源へ熱 q₂ を捨てて、仕事 w′ をする熱機関がある。効率 e を q₁、q₂ で表し、e &lt; 1 である理由を述べよ。">
+<div class="qh"><span class="num">4-03</span><span class="kind k1">基本</span>熱機関の効率</div>
+<div class="stem">高温熱源から熱 q₁ を受け取り、低温熱源へ熱 q₂ を捨てて、仕事 w′ をする熱機関がある。効率 e を q₁、q₂ で表し、e &lt; 1 である理由を述べよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p><span class="result">$e = \dfrac{w'}{q_1} = \dfrac{q_1 - q_2}{q_1} = 1 - \dfrac{q_2}{q_1}$</span></p><h4>解説</h4><p>一周で ΔU = 0 なので $w' = q_1 - q_2$(2-07)。e = 1 なら q₂ = 0、つまり受け取った熱をすべて仕事にすることになり、トムソンの原理に反する。だから必ず熱を捨てる(q₂ > 0)必要があり、e &lt; 1。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="4-04" data-kind="証明" data-star="1" data-rank="B" data-copy="第4回 4-04[証明] カルノーサイクルの効率を導く:n mol の理想気体を使ったカルノーサイクル(A→B:温度 T₁ で等温膨張 V_A→V_B、B→C:断熱膨張 V_B→V_C、C→D:温度 T₂ で等温圧縮 V_C→V_D、D→A:断熱圧縮 V_D→V_A、すべて準静的、T₁ &gt; T₂)の効率が $e_C = 1 - \dfrac{T_2}{T_1}$ となることを示せ。">
+<div class="qh"><span class="num">4-04</span><span class="pri pB" title="2021 4Q-3(サイクルの効率)と同じ型">優先度 B</span><span class="kind k3">証明</span>カルノーサイクルの効率を導く<span class="ref star">★ 2021 4Q-3 と同じ型</span></div>
+<div class="stem">n mol の理想気体を使ったカルノーサイクル(A→B:温度 T₁ で等温膨張 V_A→V_B、B→C:断熱膨張 V_B→V_C、C→D:温度 T₂ で等温圧縮 V_C→V_D、D→A:断熱圧縮 V_D→V_A、すべて準静的、T₁ > T₂)の効率が $e_C = 1 - \dfrac{T_2}{T_1}$ となることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>①等温の熱 ②断熱のポアソンの式で体積比をそろえる ③効率に代入。</p><h4>解説</h4><p><b>① 熱</b>:等温では ΔU = 0 なので q = w。</p>
+$$q_1 = q_{AB} = nRT_1\ln\frac{V_B}{V_A},\qquad q_2 = -q_{CD} = nRT_2\ln\frac{V_C}{V_D}$$
+<p>(q₂ は捨てる熱で正。)断熱過程では熱の出入りはない。</p>
+<p><b>② ポアソンの式</b>($TV^{\gamma-1}$ = 一定):</p>
+$$\text{B→C:}\ T_1V_B^{\gamma-1} = T_2V_C^{\gamma-1},\qquad \text{D→A:}\ T_2V_D^{\gamma-1} = T_1V_A^{\gamma-1}$$
+<p>辺々割ると $(V_B/V_A)^{\gamma-1} = (V_C/V_D)^{\gamma-1}$、よって $\dfrac{V_B}{V_A} = \dfrac{V_C}{V_D}$。</p>
+<p><b>③ 効率</b>:ln の部分が等しいので</p>
+$$e_C = 1 - \frac{q_2}{q_1} = 1 - \frac{nRT_2\ln(V_C/V_D)}{nRT_1\ln(V_B/V_A)} = 1 - \frac{T_2}{T_1}\qquad\blacksquare$$
+<p>2021 4Q の 3 は、等温の代わりに定積の過程が入ったサイクル。<b>「熱を求める → ポアソンの式で温度(体積)の関係 → 効率に代入」</b>という同じ流れで解ける。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="4-05" data-kind="計算" data-star="0" data-rank="" data-copy="第4回 4-05[計算] カルノー機関の数値:500 K の高温熱源と 300 K の低温熱源の間で働くカルノー機関が、1 サイクルで高温熱源から 1000 J の熱を受け取る。効率、1 サイクルの仕事、低温熱源に捨てる熱を求めよ。">
+<div class="qh"><span class="num">4-05</span><span class="kind k2">計算</span>カルノー機関の数値</div>
+<div class="stem">500 K の高温熱源と 300 K の低温熱源の間で働くカルノー機関が、1 サイクルで高温熱源から 1000 J の熱を受け取る。効率、1 サイクルの仕事、低温熱源に捨てる熱を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>効率 0.40、仕事 400 J、捨てる熱 600 J</p><h4>解説</h4><p>$e_C = 1 - 300/500 = 0.40$。$w' = e_Cq_1 = 400$ J。$q_2 = q_1 - w' = 600$ J。</p>
+<p>確かめ:$q_1/T_1 = 1000/500 = 2.0$、$q_2/T_2 = 600/300 = 2.0$。可逆なので等しい(4-07)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="4-06" data-kind="計算" data-star="1" data-rank="" data-copy="第4回 4-06[計算] 定圧加熱を含むサイクル:理想気体を次のサイクルで動かす(すべて準静的。定積熱容量 $C_V$、定圧熱容量 $C_P$ は一定、$\gamma = C_P/C_V$)。 / A→B:断熱圧縮 / B→C:定圧で加熱(T_B → T_C)/ C→D:断熱膨張 / D→A:定積で冷却(T_D → T_A) / (1) B→C で吸収する熱と、D→A で放出する熱を求めよ。(2) 効率を $T_A$〜$T_D$ と γ で表せ。">
+<div class="qh"><span class="num">4-06</span><span class="kind k2">計算</span>定圧加熱を含むサイクル<span class="ref star">★ 2021 4Q-3 の類題</span></div>
+<div class="stem">理想気体を次のサイクルで動かす(すべて準静的。定積熱容量 $C_V$、定圧熱容量 $C_P$ は一定、$\gamma = C_P/C_V$)。<br>
+A→B:断熱圧縮 / B→C:定圧で加熱(T_B → T_C)/ C→D:断熱膨張 / D→A:定積で冷却(T_D → T_A)<br>
+(1) B→C で吸収する熱と、D→A で放出する熱を求めよ。(2) 効率を $T_A$〜$T_D$ と γ で表せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) 吸収 <span class="result">$C_P(T_C - T_B)$</span>、放出 <span class="result">$C_V(T_D - T_A)$</span><br>
+(2) <span class="result">$\eta = 1 - \dfrac{T_D - T_A}{\gamma\,(T_C - T_B)}$</span></p><h4>解説</h4><p>(1) 定圧では $q = \Delta H = C_P\Delta T$(3-01)。定積では $q = \Delta U = C_V\Delta T$。断熱の2つは熱 0。</p>
+<p>(2) 一周で ΔU = 0 なので、正味の仕事 = 吸収した熱 − 放出した熱。</p>
+$$\eta = \frac{C_P(T_C - T_B) - C_V(T_D - T_A)}{C_P(T_C - T_B)} = 1 - \frac{C_V(T_D - T_A)}{C_P(T_C - T_B)} = 1 - \frac{T_D - T_A}{\gamma(T_C - T_B)}$$
+<p>2021 4Q との違い:加熱が<b>定圧</b>なので、熱が $C_V$ でなく $C_P$ になる。過程ごとに「定積 → C_V」「定圧 → C_P」「断熱 → 0」「等温 → nRT ln」を使い分ける。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="4-07" data-kind="証明" data-star="0" data-rank="" data-copy="第4回 4-07[証明] 可逆なら q₁/T₁ = q₂/T₂、不可逆なら q₁/T₁ &amp;lt; q₂/T₂:温度 T₁(高温)と T₂(低温)の熱源の間で働く熱機関が、q₁ を吸収し q₂ を捨てる。カルノーの定理 $e \leq e_C$ を使って、$\dfrac{q_1}{T_1} \leq \dfrac{q_2}{T_2}$(等号は可逆機関のとき)を示せ。">
+<div class="qh"><span class="num">4-07</span><span class="kind k3">証明</span>可逆なら q₁/T₁ = q₂/T₂、不可逆なら q₁/T₁ &lt; q₂/T₂</div>
+<div class="stem">温度 T₁(高温)と T₂(低温)の熱源の間で働く熱機関が、q₁ を吸収し q₂ を捨てる。カルノーの定理 $e \leq e_C$ を使って、$\dfrac{q_1}{T_1} \leq \dfrac{q_2}{T_2}$(等号は可逆機関のとき)を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$1 - q_2/q_1 \leq 1 - T_2/T_1$ を変形する。</p><h4>解説</h4>$$1 - \frac{q_2}{q_1} \leq 1 - \frac{T_2}{T_1}\ \Longrightarrow\ \frac{q_2}{q_1} \geq \frac{T_2}{T_1}\ \Longrightarrow\ \frac{q_1}{T_1} \leq \frac{q_2}{T_2}$$
+<p>(2つ目で −1 をかけて不等号が逆向き。3つ目は正の数 $q_1/T_2$ をかけた。)可逆なら $e = e_C$ なので等号。$\blacksquare$</p>
+<p>この「q/T」が第5回のエントロピーのもと。可逆なら、受け取る q/T と捨てる q/T がつり合う。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="4-08" data-kind="証明" data-star="0" data-rank="" data-copy="第4回 4-08[証明] ∫dq/T が経路によらない(カルノーサイクルで確かめる):4-04 のカルノーサイクルで、A から C へ行く2つの経路(A→B→C と A→D→C)について、$\int dq/T$ が等しいことを示せ。">
+<div class="qh"><span class="num">4-08</span><span class="kind k3">証明</span>∫dq/T が経路によらない(カルノーサイクルで確かめる)<span class="ref">章末4.2</span></div>
+<div class="stem">4-04 のカルノーサイクルで、A から C へ行く2つの経路(A→B→C と A→D→C)について、$\int dq/T$ が等しいことを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>どちらも $nR\ln(V_B/V_A) = nR\ln(V_C/V_D)$ になる。</p><h4>解説</h4><p>A→B→C:等温 A→B で $q/T_1 = nR\ln(V_B/V_A)$、断熱 B→C は 0。合計 $nR\ln(V_B/V_A)$。</p>
+<p>A→D→C:断熱 A→D は 0、等温 D→C(温度 T₂ で V_D → V_C、膨張)で $nR\ln(V_C/V_D)$。</p>
+<p>4-04 の②より $V_B/V_A = V_C/V_D$ なので等しい。$\blacksquare$</p>
+<p>q は経路で違うのに、q/T を足したものは経路によらない → 状態量になる。これがエントロピー(第5回)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="4-09" data-kind="説明" data-star="0" data-rank="" data-copy="第4回 4-09[説明] 可逆過程と不可逆過程:可逆過程と不可逆過程の違いを説明し、不可逆過程の例を2つ挙げよ。">
+<div class="qh"><span class="num">4-09</span><span class="kind k4">説明</span>可逆過程と不可逆過程</div>
+<div class="stem">可逆過程と不可逆過程の違いを説明し、不可逆過程の例を2つ挙げよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="result" style="display:block">可逆過程とは、変化を逆向きにたどって系を元の状態に戻したとき、外界にも何の変化も残らないような過程である。準静的過程は可逆である。そうでない過程が不可逆過程で、例として、気体の真空への自由膨張、温度の違う物体の間の熱の移動、摩擦による発熱、2種類の気体の混合などがある。</div><h4>解説</h4><p>第5回の「可逆なら $dS = dq/T$、不可逆なら $dS &gt; dq/T_e$」の前提になる。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="4-10" data-kind="説明" data-star="0" data-rank="" data-copy="第4回 4-10[説明] カルノーの定理:カルノーの定理の内容を述べ、それが「カルノー機関の効率は作業物質によらない」ことを意味する理由を説明せよ。">
+<div class="qh"><span class="num">4-10</span><span class="kind k4">説明</span>カルノーの定理</div>
+<div class="stem">カルノーの定理の内容を述べ、それが「カルノー機関の効率は作業物質によらない」ことを意味する理由を説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="result" style="display:block">カルノーの定理:同じ2つの熱源の間で働く熱機関のうち、可逆機関の効率が最大であり、可逆機関の効率はすべて等しい。どんな熱機関の効率 e′ も $e' \leq e_C = 1 - T_2/T_1$ を満たす。可逆機関どうしの効率が等しいので、効率は作業物質(理想気体かどうかなど)によらず、熱源の温度だけで決まる。</div><h4>解説</h4><p>理由の中身:もし可逆機関 X の効率が別の可逆機関 Y より大きければ、X で Y を逆回しすると、ほかに変化を残さずに低温から高温へ熱が移る(または熱が全部仕事になる)ことになり、第二法則に反する。</p>
+<p>章末4.3 の解答:「カルノーの定理により、作業物質にかかわらず効率は熱源の温度のみで決まる」。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+</section>
+<section class="tab" id="tab-l5">
+<h1>第5回 5章 エントロピー</h1>
+<p class="sub">19問。過去問での小問数:8</p>
+<div class="filters"><button class="on" data-f="all">すべて</button><button data-f="pA">優先度 A</button><button data-f="pAB">優先度 A+B</button><button data-f="star">★ 過去問に近い</button><button data-f="証明">証明</button><button data-f="説明">説明</button><button data-f="計算">計算</button><button data-f="基本">基本</button><button data-f="todo">未記録</button><button data-f="bad">× と △</button></div>
+<div class="q" data-id="5-01" data-kind="基本" data-star="0" data-rank="" data-copy="第5回 5-01[基本] エントロピーの定義:エントロピーの微小変化 dS の定義を書け。また、なぜ「可逆」な熱を使うのか説明せよ。">
+<div class="qh"><span class="num">5-01</span><span class="kind k1">基本</span>エントロピーの定義</div>
+<div class="stem">エントロピーの微小変化 dS の定義を書け。また、なぜ「可逆」な熱を使うのか説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$dS = \dfrac{dq_{\text{rev}}}{T}$</span><h4>解説</h4><p>熱 q は経路で値が変わるが、可逆な経路での $dq/T$ を足したものは経路によらない(4-08、クラウジウスの等式 $\oint dq_{\text{rev}}/T = 0$)。だから状態量として定義できる。不可逆な経路の dq/T を足しても、状態量にはならない(5-03)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-02" data-kind="説明" data-star="0" data-rank="" data-copy="第5回 5-02[説明] エントロピーが状態量であること:エントロピー S が状態量であることを説明せよ。">
+<div class="qh"><span class="num">5-02</span><span class="kind k4">説明</span>エントロピーが状態量であること</div>
+<div class="stem">エントロピー S が状態量であることを説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="result" style="display:block">可逆サイクルではクラウジウスの不等式の等号が成り立ち、$\oint \dfrac{dq_{\text{rev}}}{T} = 0$ となる。状態 A から B への2つの可逆な経路 C₁、C₂ を考え、C₁ で行って C₂ を逆にたどって戻るサイクルにこれを使うと、$\int_{C_1}\dfrac{dq_{\text{rev}}}{T} = \int_{C_2}\dfrac{dq_{\text{rev}}}{T}$ となり、値は経路によらない。だから $S(B) - S(A) = \int_A^B \dfrac{dq_{\text{rev}}}{T}$ で状態量 S を定義できる。</div><h4>解説</h4><p>第1回の「経路によらない ⇔ 一周で 0 ⇔ 状態量」をそのまま使っている。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-03" data-kind="証明" data-star="0" data-rank="" data-copy="第5回 5-03[証明] 第二法則の式と、孤立系で ΔS ≥ 0:クラウジウスの不等式 $\oint \dfrac{dq}{T_e} \leq 0$ から、状態 A→B の任意の変化について $\Delta S \geq \int_A^B \dfrac{dq}{T_e}$ を導き、孤立系では $\Delta S \geq 0$ となることを示せ。">
+<div class="qh"><span class="num">5-03</span><span class="kind k3">証明</span>第二法則の式と、孤立系で ΔS ≥ 0</div>
+<div class="stem">クラウジウスの不等式 $\oint \dfrac{dq}{T_e} \leq 0$ から、状態 A→B の任意の変化について $\Delta S \geq \int_A^B \dfrac{dq}{T_e}$ を導き、孤立系では $\Delta S \geq 0$ となることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>A→B を任意の経路で、B→A を可逆な経路で戻るサイクルに、クラウジウスの不等式を使う。</p><h4>解説</h4>$$\int_A^B\frac{dq}{T_e} + \int_B^A\frac{dq_{\text{rev}}}{T} \leq 0$$
+<p>2つ目は $S(A) - S(B) = -\Delta S$。よって $\Delta S \geq \int_A^B dq/T_e$(等号は A→B も可逆のとき)。</p>
+<p>孤立系では熱の出入りがない(dq = 0)ので右辺は 0。$\Delta S \geq 0$。$\blacksquare$</p>
+<p>意味:孤立系では S は増えるか変わらないかのどちらか。S が最大になったところで変化が止まる = 平衡(平衡条件1)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-04" data-kind="証明" data-star="0" data-rank="B" data-copy="第5回 5-04[証明] 熱力学の基本式 dU = TdS − PdV:閉じた系(PV 仕事のみ)について、$dU = T\,dS - P\,dV$ を導け。また、この式が不可逆な変化でも使える理由を述べよ。">
+<div class="qh"><span class="num">5-04</span><span class="pri pB" title="ほとんどの証明の出発点。何も見ずに書けるように">優先度 B</span><span class="kind k3">証明</span>熱力学の基本式 dU = TdS − PdV</div>
+<div class="stem">閉じた系(PV 仕事のみ)について、$dU = T\,dS - P\,dV$ を導け。また、この式が不可逆な変化でも使える理由を述べよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>可逆変化で $dq = T\,dS$、$dw = P\,dV$ を第一法則に入れる。</p><h4>解説</h4><p>第一法則 $dU = dq - dw$。可逆(準静的)変化では $dq_{\text{rev}} = T\,dS$、$dw = P\,dV$。よって $dU = T\,dS - P\,dV$。</p>
+<p>この式に出てくる U、T、S、P、V はすべて<b>状態量</b>。状態量どうしの関係なので、最初と最後が平衡状態なら、実際の変化が不可逆でも成り立つ(q や w に分けたときの値だけが変わる)。</p>
+<p><b>第6回の証明問題(dF、dG、マクスウェルの関係式)は、すべてこの式から始まる。</b>最重要。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-05" data-kind="証明" data-star="1" data-rank="B" data-copy="第5回 5-05[証明] dH = TdS + VdP:$dU = T\,dS - P\,dV$ と $H = U + PV$ から、$dH = T\,dS + V\,dP$ を導け。">
+<div class="qh"><span class="num">5-05</span><span class="pri pB" title="2021 3Q-3 の途中で使う">優先度 B</span><span class="kind k3">証明</span>dH = TdS + VdP<span class="ref star">★ 2021 3Q-3 の途中</span></div>
+<div class="stem">$dU = T\,dS - P\,dV$ と $H = U + PV$ から、$dH = T\,dS + V\,dP$ を導け。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$dH = dU + P\,dV + V\,dP$ に dU を入れる。</p><h4>解説</h4>$$dH = dU + d(PV) = (T\,dS - P\,dV) + P\,dV + V\,dP = T\,dS + V\,dP\qquad\blacksquare$$
+<p>$d(PV) = P\,dV + V\,dP$(積の微分)を忘れないこと。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-06" data-kind="計算" data-star="1" data-rank="A" data-copy="第5回 5-06[計算] 定温可逆変化の ΔS:n mol の理想気体を、温度 T 一定で可逆的に変化させた。(1) 体積が $V_1$ から $V_2$ になったとき (2) 圧力が $P_1$ から $P_2$ になったとき、それぞれの ΔS を求めよ。">
+<div class="qh"><span class="num">5-06</span><span class="pri pA" title="2019【3】(1)">優先度 A</span><span class="kind k2">計算</span>定温可逆変化の ΔS<span class="ref star">★ 2019【3】(1)</span></div>
+<div class="stem">n mol の理想気体を、温度 T 一定で可逆的に変化させた。(1) 体積が $V_1$ から $V_2$ になったとき (2) 圧力が $P_1$ から $P_2$ になったとき、それぞれの ΔS を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) <span class="result">$nR\ln\dfrac{V_2}{V_1}$</span> (2) <span class="result">$nR\ln\dfrac{P_1}{P_2}$</span></p><h4>解説</h4><p>ΔU = 0 なので $q_{\text{rev}} = w = nRT\ln(V_2/V_1)$。T 一定なので $\Delta S = q_{\text{rev}}/T = nR\ln(V_2/V_1)$。</p>
+<p>T 一定では $V_2/V_1 = P_1/P_2$。<b>圧力では分子と分母が逆</b>になるので注意。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-07" data-kind="計算" data-star="1" data-rank="A" data-copy="第5回 5-07[計算] 定圧・定積で温度を変えたときの ΔS:理想気体を準静的に加熱して、温度を $T_1$ から $T_2$ にした。(1) 定圧のとき (2) 定積のとき の ΔS を、$C_P$、$C_V$(温度によらない)で表せ。">
+<div class="qh"><span class="num">5-07</span><span class="pri pA" title="2019【3】(3)">優先度 A</span><span class="kind k2">計算</span>定圧・定積で温度を変えたときの ΔS<span class="ref star">★ 2019【3】(3)</span></div>
+<div class="stem">理想気体を準静的に加熱して、温度を $T_1$ から $T_2$ にした。(1) 定圧のとき (2) 定積のとき の ΔS を、$C_P$、$C_V$(温度によらない)で表せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) <span class="result">$C_P\ln\dfrac{T_2}{T_1}$</span> (2) <span class="result">$C_V\ln\dfrac{T_2}{T_1}$</span></p><h4>解説</h4><p>定圧では $dq = C_P\,dT$、定積では $dq = C_V\,dT$。$dS = dq/T$ を積分。</p>
+$$\Delta S = \int_{T_1}^{T_2}\frac{C_P}{T}dT = C_P\ln\frac{T_2}{T_1}$$</div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-08" data-kind="計算" data-star="1" data-rank="A" data-copy="第5回 5-08[計算] 断熱可逆変化の ΔS:理想気体を断熱可逆的に膨張させ、温度が $T_1$ から $T_2$ に下がった。ΔS を求めよ。また、「温度が下がったのだから S も減るはず」という考えのどこが間違いか説明せよ。">
+<div class="qh"><span class="num">5-08</span><span class="pri pA" title="2019【3】(2)">優先度 A</span><span class="kind k2">計算</span>断熱可逆変化の ΔS<span class="ref star">★ 2019【3】(2)</span></div>
+<div class="stem">理想気体を断熱可逆的に膨張させ、温度が $T_1$ から $T_2$ に下がった。ΔS を求めよ。また、「温度が下がったのだから S も減るはず」という考えのどこが間違いか説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$\Delta S = 0$</span><h4>解説</h4><p>可逆で $dq_{\text{rev}} = 0$ なので dS = 0。</p>
+<p>説明:S は温度だけでなく体積にもよる(5-09 の $S = C_V\ln T + R\ln V + C$)。温度が下がって S が減る分を、体積が増えて S が増える分がちょうど打ち消している。</p>
+<p>注意:断熱でも<b>不可逆</b>(例:自由膨張)なら ΔS > 0(5-11)。「断熱だから ΔS = 0」ではなく「断熱<b>可逆</b>だから 0」。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-09" data-kind="証明" data-star="1" data-rank="A" data-copy="第5回 5-09[証明] 理想気体の S を T と V で表す:理想気体 1 mol のエントロピーが $S = C_V\ln T + R\ln V + C$(C は定数、$C_V$ は温度によらない)と表されることを示せ。">
+<div class="qh"><span class="num">5-09</span><span class="pri pA" title="2021 3Q-6">優先度 A</span><span class="kind k3">証明</span>理想気体の S を T と V で表す<span class="ref star">★ 2021 3Q-6</span></div>
+<div class="stem">理想気体 1 mol のエントロピーが $S = C_V\ln T + R\ln V + C$(C は定数、$C_V$ は温度によらない)と表されることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$dS = (dU + P\,dV)/T$ に $dU = C_V\,dT$、$P = RT/V$ を入れて積分。</p><h4>解説</h4>$$dS = \frac{dU + P\,dV}{T} = C_V\frac{dT}{T} + \frac{R}{V}dV\quad\Longrightarrow\quad S = C_V\ln T + R\ln V + C\qquad\blacksquare$$
+<p>1行目は基本式 $T\,dS = dU + P\,dV$(5-04)。理想気体では $dU = C_V\,dT$(U は T だけで決まる)、$P/T = R/V$。</p>
+<p><b>このあとの問題(5-10、5-12)の基礎。過去問で出ている。</b></p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-10" data-kind="証明" data-star="0" data-rank="" data-copy="第5回 5-10[証明] 理想気体の S を T と P で表す:理想気体 1 mol のエントロピーが $S = C_P\ln T - R\ln P + C&#x27;$(C′ は定数、$C_P$ は温度によらない)と表されることを示せ。">
+<div class="qh"><span class="num">5-10</span><span class="kind k3">証明</span>理想気体の S を T と P で表す<span class="ref">5-09 の変形</span></div>
+<div class="stem">理想気体 1 mol のエントロピーが $S = C_P\ln T - R\ln P + C'$(C′ は定数、$C_P$ は温度によらない)と表されることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$dS = (dH - V\,dP)/T$ に $dH = C_P\,dT$、$V = RT/P$ を入れて積分。</p><h4>解説</h4><p>5-05 の $dH = T\,dS + V\,dP$ より $dS = \dfrac{dH - V\,dP}{T}$。理想気体では $dH = C_P\,dT$(H も T だけで決まる、3-10)、$V/T = R/P$。</p>
+$$dS = C_P\frac{dT}{T} - R\frac{dP}{P}\quad\Longrightarrow\quad S = C_P\ln T - R\ln P + C'\qquad\blacksquare$$
+<p>別解:5-09 に $V = RT/P$ を入れ、$C_V + R = C_P$ を使っても同じ式になる。章末6.1 でも S(T, P) をこの形で使っている。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-11" data-kind="計算" data-star="1" data-rank="A" data-copy="第5回 5-11[計算] 2段階の変化の ΔS:体積 $V_1$、温度 $T_1$ の理想気体 1 mol を、(1) 温度一定で $V_2$ まで膨張させ、さらに体積一定で $T_2$ まで加熱した。(2) 温度一定で $V_2$ まで膨張させ、さらに断熱可逆的に $V_3$ まで膨張させた。それぞれの全体の ΔS を求めよ(定積モル熱容量 $C_V$ は一定)。">
+<div class="qh"><span class="num">5-11</span><span class="pri pA" title="2021 4Q-4">優先度 A</span><span class="kind k2">計算</span>2段階の変化の ΔS<span class="ref star">★ 2021 4Q-4、章末5.1</span></div>
+<div class="stem">体積 $V_1$、温度 $T_1$ の理想気体 1 mol を、(1) 温度一定で $V_2$ まで膨張させ、さらに体積一定で $T_2$ まで加熱した。(2) 温度一定で $V_2$ まで膨張させ、さらに断熱可逆的に $V_3$ まで膨張させた。それぞれの全体の ΔS を求めよ(定積モル熱容量 $C_V$ は一定)。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) <span class="result">$R\ln\dfrac{V_2}{V_1} + C_V\ln\dfrac{T_2}{T_1}$</span> (2) <span class="result">$R\ln\dfrac{V_2}{V_1}$</span></p><h4>解説</h4><p>S は状態量なので、段階ごとに足してよい。</p>
+<p>(1) 等温 $R\ln(V_2/V_1)$ + 定積加熱 $C_V\ln(T_2/T_1)$(5-06、5-07)。5-09 の式の差をとっても同じ。</p>
+<p>(2) 等温 $R\ln(V_2/V_1)$ + 断熱可逆 0。<b>V₃ は答えに入らない</b>(2021 4Q-4 そのもの)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-12" data-kind="計算" data-star="0" data-rank="" data-copy="第5回 5-12[計算] 自由膨張の ΔS:n mol の理想気体を、断熱容器の中で体積 $V_1$ から真空へ $V_2$ まで自由膨張させた。ΔS を求めよ。また、q = 0 なのに ΔS ≠ 0 である理由を説明せよ。">
+<div class="qh"><span class="num">5-12</span><span class="kind k2">計算</span>自由膨張の ΔS</div>
+<div class="stem">n mol の理想気体を、断熱容器の中で体積 $V_1$ から真空へ $V_2$ まで自由膨張させた。ΔS を求めよ。また、q = 0 なのに ΔS ≠ 0 である理由を説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$\Delta S = nR\ln\dfrac{V_2}{V_1} &gt; 0$</span><h4>解説</h4><p>自由膨張では q = 0、w = 0 なので ΔU = 0、理想気体なので温度は変わらない。最初と最後は「温度 T で V₁」と「温度 T で V₂」。</p>
+<p>S は状態量なので、同じ最初と最後を結ぶ<b>可逆な等温膨張</b>で計算してよい:$\Delta S = nR\ln(V_2/V_1)$。</p>
+<p>理由:$dS = dq/T$ が使えるのは可逆なときだけ。自由膨張は不可逆なので $\Delta S &gt; \int dq/T_e = 0$(5-03 の不等号)。孤立系で S が増えたので、自然に起こる変化である。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-13" data-kind="計算" data-star="1" data-rank="A" data-copy="第5回 5-13[計算] 2種類の理想気体の混合の ΔS:温度 T、圧力 P の理想気体 A($n_A$ mol)と、同じ T、P の理想気体 B($n_B$ mol)を、仕切りを取って混合した。エントロピー変化を求めよ。">
+<div class="qh"><span class="num">5-13</span><span class="pri pA" title="2021 3Q-4(1)">優先度 A</span><span class="kind k2">計算</span>2種類の理想気体の混合の ΔS<span class="ref star">★ 2021 3Q-4(1)</span></div>
+<div class="stem">温度 T、圧力 P の理想気体 A($n_A$ mol)と、同じ T、P の理想気体 B($n_B$ mol)を、仕切りを取って混合した。エントロピー変化を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p><span class="result">$\Delta S = -R(n_A\ln x_A + n_B\ln x_B)$</span>($x_A = n_A/(n_A + n_B)$ など)</p><h4>解説</h4><p>T、P が同じなので体積は物質量に比例。A は $V_A$ → $V_A + V_B$、B は $V_B$ → $V_A + V_B$ へ、それぞれ等温で広がったのと同じ(理想気体どうしは影響し合わない)。</p>
+$$\Delta S = n_AR\ln\frac{V_A + V_B}{V_A} + n_BR\ln\frac{V_A + V_B}{V_B} = n_AR\ln\frac{1}{x_A} + n_BR\ln\frac{1}{x_B}$$
+<p>$x &lt; 1$ なので ΔS > 0。混合は自然に進む。<b>導出(「各気体が全体積まで等温で広がる」)まで書けるように。</b></p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-14" data-kind="計算" data-star="1" data-rank="B" data-copy="第5回 5-14[計算] 混合気体にさらに気体を混ぜる:理想気体 A(n mol)と B(n mol)の混合気体(温度 T、圧力 P)に、理想気体 A(n mol、温度 T、圧力 P)を定温で混合した。エントロピー変化を求めよ。">
+<div class="qh"><span class="num">5-14</span><span class="pri pB" title="2021 3Q-4(2) の類題">優先度 B</span><span class="kind k2">計算</span>混合気体にさらに気体を混ぜる<span class="ref star">★ 2021 3Q-4(2) の類題</span></div>
+<div class="stem">理想気体 A(n mol)と B(n mol)の混合気体(温度 T、圧力 P)に、理想気体 A(n mol、温度 T、圧力 P)を定温で混合した。エントロピー変化を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$\Delta S = nR\ln\dfrac{27}{16}$</span>($\approx 0.52\,nR$)<h4>解説</h4><p>n mol 分の体積を v とする。混合気体は 2v、純粋な A は v、混合後は 3v(A 2n、B n)。</p>
+<p><b>方法1(成分ごとに体積の変化)</b></p>
+<ul><li>B:2v → 3v。$nR\ln\frac32$</li>
+<li>混合気体の中の A:1 mol あたり 2v/n → 3v/(2n)。$nR\ln\frac{3/2}{2} = nR\ln\frac34$</li>
+<li>純粋な A:1 mol あたり v/n → 3v/(2n)。$nR\ln\frac32$</li></ul>
+<p>合計 $nR\ln\left(\frac32\cdot\frac34\cdot\frac32\right) = nR\ln\frac{27}{16}$。</p>
+<p><b>方法2(混合エントロピーの差)</b>:混合後 $-R\left(2n\ln\frac23 + n\ln\frac13\right) = nR\ln\frac{27}{4}$。混合前 $-R\left(n\ln\frac12 + n\ln\frac12\right) = nR\ln 4$(純粋な A は 0)。差 $nR\ln\frac{27}{16}$。一致。</p>
+<p><b>ポイント</b>:同じ気体 A どうしの「混合」ではエントロピーは生まれない。A と A を別の気体として 5-13 の式に入れると間違える(5-15)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-15" data-kind="説明" data-star="1" data-rank="B" data-copy="第5回 5-15[説明] 同じ気体どうしの混合:温度 T、圧力 P の理想気体 A(n mol)と、同じ T、P の同じ気体 A(n mol)を、仕切りを取って混合した。ΔS を求め、5-13 の式をそのまま使えない理由を説明せよ。">
+<div class="qh"><span class="num">5-15</span><span class="pri pB" title="2021 3Q-4(2) の考え方。説明で問われやすい">優先度 B</span><span class="kind k4">説明</span>同じ気体どうしの混合<span class="ref star">★ 2021 3Q-4(2) の考え方</span></div>
+<div class="stem">温度 T、圧力 P の理想気体 A(n mol)と、同じ T、P の同じ気体 A(n mol)を、仕切りを取って混合した。ΔS を求め、5-13 の式をそのまま使えない理由を説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$\Delta S = 0$</span><h4>解説</h4><p>仕切りを取っても、温度・圧力・1 mol あたりの体積は何も変わらない。仕切りを戻せば元の状態と区別できないので、状態は変わっていない。だから ΔS = 0。</p>
+<p>5-13 は「A は A だけで全体積に広がる」と考えた。同じ気体どうしだと、もともと区別できない分子が入れかわるだけで、「広がった」ことにならない。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-16" data-kind="証明" data-star="0" data-rank="" data-copy="第5回 5-16[証明] 熱が高温から低温へ流れる理由:温度 $T_h$ の大きな物体と温度 $T_c$ の大きな物体($T_h &gt; T_c$、どちらも温度は変わらないほど大きい)を接触させ、熱 q(&gt; 0)が高温側から低温側へ移った。2つを合わせた系(孤立系)の ΔS を求め、熱が自然に流れる向きを説明せよ。">
+<div class="qh"><span class="num">5-16</span><span class="kind k3">証明</span>熱が高温から低温へ流れる理由</div>
+<div class="stem">温度 $T_h$ の大きな物体と温度 $T_c$ の大きな物体($T_h &gt; T_c$、どちらも温度は変わらないほど大きい)を接触させ、熱 q(> 0)が高温側から低温側へ移った。2つを合わせた系(孤立系)の ΔS を求め、熱が自然に流れる向きを説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$\Delta S = q\left(\dfrac{1}{T_c} - \dfrac{1}{T_h}\right) &gt; 0$</span><h4>解説</h4><p>高温側は q を失う:$\Delta S_h = -q/T_h$。低温側は q を得る:$\Delta S_c = q/T_c$。(温度が変わらないので、可逆に熱を出し入れしたと考えて計算できる。)</p>
+<p>$T_h &gt; T_c$ なので $1/T_c &gt; 1/T_h$、合計は正。孤立系では S が増える向きに変化が進む(5-03)ので、熱は高温から低温へ流れる。逆向きなら ΔS &lt; 0 で起こらない。これがクラウジウスの原理(4-01)を S で表したもの。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-17" data-kind="計算" data-star="0" data-rank="" data-copy="第5回 5-17[計算] 相変化の ΔS:氷の融解熱は 273 K で 6.01 kJ/mol である。273 K で氷 1 mol が融けるときの ΔS を求めよ。">
+<div class="qh"><span class="num">5-17</span><span class="kind k2">計算</span>相変化の ΔS</div>
+<div class="stem">氷の融解熱は 273 K で 6.01 kJ/mol である。273 K で氷 1 mol が融けるときの ΔS を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$\Delta S \approx 22.0\ \text{J K}^{-1}\text{mol}^{-1}$</span><h4>解説</h4><p>融点では氷と水が平衡で、融解は可逆に、温度一定で進む。定圧なので $q = \Delta H$。</p>
+<p>$\Delta S = \Delta H/T = 6010/273 \approx 22.0$ J/(K·mol)。固体 → 液体で乱雑さが増すので正。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-18" data-kind="証明" data-star="1" data-rank="A" data-copy="第5回 5-18[証明] 熱容量をエントロピーで表す:$C_V = T\left(\dfrac{\partial S}{\partial T}\right)_V$、$C_P = T\left(\dfrac{\partial S}{\partial T}\right)_P$ を示せ。">
+<div class="qh"><span class="num">5-18</span><span class="pri pA" title="2021 3Q-3">優先度 A</span><span class="kind k3">証明</span>熱容量をエントロピーで表す<span class="ref star">★ 2021 3Q-3</span></div>
+<div class="stem">$C_V = T\left(\dfrac{\partial S}{\partial T}\right)_V$、$C_P = T\left(\dfrac{\partial S}{\partial T}\right)_P$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>dU = TdS − PdV(V 一定)と dH = TdS + VdP(P 一定)を使う。</p><h4>解説</h4><p>V 一定では $dU = T\,dS$。両辺を dT で割ると $C_V = (\partial U/\partial T)_V = T(\partial S/\partial T)_V$。</p>
+<p>P 一定では $dH = T\,dS$。$C_P = (\partial H/\partial T)_P = T(\partial S/\partial T)_P$。$\blacksquare$</p>
+<p>2021 3Q で出題。<b>熱容量の定義(3-04)と基本式(5-04、5-05)の組み合わせ</b>。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="5-19" data-kind="説明" data-star="0" data-rank="" data-copy="第5回 5-19[説明] 熱力学第三法則:熱力学第三法則を説明し、それによって何ができるようになるか述べよ。">
+<div class="qh"><span class="num">5-19</span><span class="kind k4">説明</span>熱力学第三法則</div>
+<div class="stem">熱力学第三法則を説明し、それによって何ができるようになるか述べよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="result" style="display:block">熱力学第三法則:完全結晶のエントロピーは、絶対零度(0 K)で 0 になる($\lim_{T\to 0}S = 0$)。これまでの式では ΔS(変化量)しか計算できなかったが、第三法則で基準が決まるので、物質のエントロピーの値そのもの(絶対エントロピー)を決められる。</div><h4>解説</h4><p>エンタルピーで「安定な単体の標準生成エンタルピー = 0」と基準を決めたのと似ている。ただし S は「0 K の完全結晶 = 0」という物理的な基準。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+</section>
+<section class="tab" id="tab-l6">
+<h1>第6回 6章 ギブズエネルギーと化学ポテンシャル</h1>
+<p class="sub">22問。過去問での小問数:9</p>
+<div class="filters"><button class="on" data-f="all">すべて</button><button data-f="pA">優先度 A</button><button data-f="pAB">優先度 A+B</button><button data-f="star">★ 過去問に近い</button><button data-f="証明">証明</button><button data-f="説明">説明</button><button data-f="計算">計算</button><button data-f="基本">基本</button><button data-f="todo">未記録</button><button data-f="bad">× と △</button></div>
+<div class="q" data-id="6-01" data-kind="基本" data-star="0" data-rank="" data-copy="第6回 6-01[基本] F と G の定義:ヘルムホルツエネルギー F とギブズエネルギー G の定義を書け。また、$G = F + PV = H - TS$ が同じものであることを確かめよ。">
+<div class="qh"><span class="num">6-01</span><span class="kind k1">基本</span>F と G の定義</div>
+<div class="stem">ヘルムホルツエネルギー F とギブズエネルギー G の定義を書け。また、$G = F + PV = H - TS$ が同じものであることを確かめよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p><span class="result">$F = U - TS$、 $G = F + PV = H - TS$</span></p><h4>解説</h4><p>$F + PV = U - TS + PV = (U + PV) - TS = H - TS$。</p>
+<p>覚え方:U から TS を引くと F、H から TS を引くと G。H は U に PV を足したもの、G は F に PV を足したもの。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-02" data-kind="証明" data-star="1" data-rank="A" data-copy="第6回 6-02[証明] dF = −SdT − PdV:ヘルムホルツエネルギーの微小変化が $dF = -S\,dT - P\,dV$ となることを示せ。">
+<div class="qh"><span class="num">6-02</span><span class="pri pA" title="2021 4Q-5(1)。dF か dG の導出は3年とも出ている">優先度 A</span><span class="kind k3">証明</span>dF = −SdT − PdV<span class="ref star">★ 2021 4Q-5(1)</span></div>
+<div class="stem">ヘルムホルツエネルギーの微小変化が $dF = -S\,dT - P\,dV$ となることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$dF = dU - T\,dS - S\,dT$ に $dU = T\,dS - P\,dV$ を入れる。</p><h4>解説</h4>$$dF = d(U - TS) = dU - T\,dS - S\,dT = (T\,dS - P\,dV) - T\,dS - S\,dT = -S\,dT - P\,dV\qquad\blacksquare$$
+<p>書くこと:①定義 F = U − TS ②積の微分 d(TS) = TdS + SdT ③基本式 dU = TdS − PdV ④TdS が消える。<b>4行で書ける。</b></p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-03" data-kind="証明" data-star="1" data-rank="A" data-copy="第6回 6-03[証明] dG = −SdT + VdP:ギブズエネルギーの微小変化 dG を dT と dP で表せ(導出も書くこと)。">
+<div class="qh"><span class="num">6-03</span><span class="pri pA" title="2019【4】(1)、2021 3Q-5(1)">優先度 A</span><span class="kind k3">証明</span>dG = −SdT + VdP<span class="ref star">★ 2019【4】(1)、2021 3Q-5(1)</span></div>
+<div class="stem">ギブズエネルギーの微小変化 dG を dT と dP で表せ(導出も書くこと)。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$dG = -S\,dT + V\,dP$</span><h4>解説</h4>$$dG = d(H - TS) = dH - T\,dS - S\,dT$$
+<p>$dH = T\,dS + V\,dP$(5-05)を入れると TdS が消えて $dG = -S\,dT + V\,dP$。</p>
+<p>別ルート:$G = U + PV - TS$ から $dG = dU + P\,dV + V\,dP - T\,dS - S\,dT$、$dU = T\,dS - P\,dV$ を入れる。</p>
+<p><b>3年分すべてで、dG か dF の導出が出ている。最重要。</b></p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-04" data-kind="証明" data-star="1" data-rank="A" data-copy="第6回 6-04[証明] G の偏微分:$\left(\dfrac{\partial G}{\partial T}\right)_P = -S$、$\left(\dfrac{\partial G}{\partial P}\right)_T = V$ を示せ。">
+<div class="qh"><span class="num">6-04</span><span class="pri pA" title="2021 3Q-5(1)">優先度 A</span><span class="kind k3">証明</span>G の偏微分<span class="ref star">★ 2021 3Q-5(1)</span></div>
+<div class="stem">$\left(\dfrac{\partial G}{\partial T}\right)_P = -S$、$\left(\dfrac{\partial G}{\partial P}\right)_T = V$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>dG = −SdT + VdP と、G(T, P) の全微分を比べる。</p><h4>解説</h4><p>G を T と P の関数とみると $dG = \left(\dfrac{\partial G}{\partial T}\right)_P dT + \left(\dfrac{\partial G}{\partial P}\right)_T dP$。6-03 の $dG = -S\,dT + V\,dP$ と、dT・dP の係数を比べる。$\blacksquare$</p>
+<p>同じように F からは $(\partial F/\partial T)_V = -S$、$(\partial F/\partial V)_T = -P$、U からは $(\partial U/\partial S)_V = T$、$(\partial U/\partial V)_S = -P$ が出る。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-05" data-kind="証明" data-star="1" data-rank="A" data-copy="第6回 6-05[証明] マクスウェルの関係式(G から):$\left(\dfrac{\partial S}{\partial P}\right)_T = -\left(\dfrac{\partial V}{\partial T}\right)_P$ を示せ。">
+<div class="qh"><span class="num">6-05</span><span class="pri pA" title="2019【4】(2)">優先度 A</span><span class="kind k3">証明</span>マクスウェルの関係式(G から)<span class="ref star">★ 2019【4】(2)</span></div>
+<div class="stem">$\left(\dfrac{\partial S}{\partial P}\right)_T = -\left(\dfrac{\partial V}{\partial T}\right)_P$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>6-04 の2つの式を、もう一方の変数で微分して比べる。</p><h4>解説</h4><p>6-04 より $(\partial G/\partial T)_P = -S$、$(\partial G/\partial P)_T = V$。</p>
+<p>1つ目を P で、2つ目を T で微分する。G は状態量なので、偏微分の順番によらない(1-08)。</p>
+$$\frac{\partial^2 G}{\partial P\,\partial T} = -\left(\frac{\partial S}{\partial P}\right)_T,\qquad \frac{\partial^2 G}{\partial T\,\partial P} = \left(\frac{\partial V}{\partial T}\right)_P$$
+<p>これらが等しいので $\left(\dfrac{\partial S}{\partial P}\right)_T = -\left(\dfrac{\partial V}{\partial T}\right)_P$。$\blacksquare$</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-06" data-kind="証明" data-star="1" data-rank="A" data-copy="第6回 6-06[証明] マクスウェルの関係式(F から):$\left(\dfrac{\partial S}{\partial V}\right)_T = \left(\dfrac{\partial P}{\partial T}\right)_V$ を示せ。">
+<div class="qh"><span class="num">6-06</span><span class="pri pA" title="2021 4Q-5(2)">優先度 A</span><span class="kind k3">証明</span>マクスウェルの関係式(F から)<span class="ref star">★ 2021 4Q-5(2)</span></div>
+<div class="stem">$\left(\dfrac{\partial S}{\partial V}\right)_T = \left(\dfrac{\partial P}{\partial T}\right)_V$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>dF = −SdT − PdV から $(\partial F/\partial T)_V = -S$、$(\partial F/\partial V)_T = -P$。微分の順番を入れかえる。</p><h4>解説</h4>$$\left[\frac{\partial}{\partial V}\left(\frac{\partial F}{\partial T}\right)_V\right]_T = -\left(\frac{\partial S}{\partial V}\right)_T,\qquad \left[\frac{\partial}{\partial T}\left(\frac{\partial F}{\partial V}\right)_T\right]_V = -\left(\frac{\partial P}{\partial T}\right)_V$$
+<p>2つは等しいので、両辺に −1 をかけて示す式。$\blacksquare$</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-07" data-kind="証明" data-star="0" data-rank="B" data-copy="第6回 6-07[証明] マクスウェルの関係式(U から):$\left(\dfrac{\partial T}{\partial V}\right)_S = -\left(\dfrac{\partial P}{\partial S}\right)_V$ を示せ。">
+<div class="qh"><span class="num">6-07</span><span class="pri pB" title="U からのマクスウェルの関係式はまだ出ていない。次に出るならここ(推測)">優先度 B</span><span class="kind k3">証明</span>マクスウェルの関係式(U から)<span class="ref">講義 第6回 p.9</span></div>
+<div class="stem">$\left(\dfrac{\partial T}{\partial V}\right)_S = -\left(\dfrac{\partial P}{\partial S}\right)_V$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>dU = TdS − PdV から $(\partial U/\partial S)_V = T$、$(\partial U/\partial V)_S = -P$。</p><h4>解説</h4><p>1つ目を V で、2つ目を S で微分すると、どちらも $\partial^2U/\partial V\partial S$。</p>
+$$\left(\frac{\partial T}{\partial V}\right)_S = \left(\frac{\partial (-P)}{\partial S}\right)_V = -\left(\frac{\partial P}{\partial S}\right)_V\qquad\blacksquare$$
+<p>講義のスライドで導いた式。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-08" data-kind="証明" data-star="0" data-rank="B" data-copy="第6回 6-08[証明] マクスウェルの関係式(H から):$\left(\dfrac{\partial T}{\partial P}\right)_S = \left(\dfrac{\partial V}{\partial S}\right)_P$ を示せ。">
+<div class="qh"><span class="num">6-08</span><span class="pri pB" title="H からのマクスウェルの関係式。6-07 と同じ理由">優先度 B</span><span class="kind k3">証明</span>マクスウェルの関係式(H から)</div>
+<div class="stem">$\left(\dfrac{\partial T}{\partial P}\right)_S = \left(\dfrac{\partial V}{\partial S}\right)_P$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>dH = TdS + VdP から $(\partial H/\partial S)_P = T$、$(\partial H/\partial P)_S = V$。</p><h4>解説</h4><p>1つ目を P で、2つ目を S で微分して比べる。$\left(\dfrac{\partial T}{\partial P}\right)_S = \left(\dfrac{\partial V}{\partial S}\right)_P$。$\blacksquare$</p>
+<p><b>4つまとめて</b>:U(S,V)、H(S,P)、F(T,V)、G(T,P)。「どの関数の、どの2変数か」を覚えれば、どれでも同じ手順で出せる。符号は元の式(dU = TdS <b>−</b> PdV など)の符号から決まる。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-09" data-kind="証明" data-star="0" data-rank="" data-copy="第6回 6-09[証明] エネルギー方程式とジュールの法則:(1) $\left(\dfrac{\partial U}{\partial V}\right)_T = T\left(\dfrac{\partial P}{\partial T}\right)_V - P$ を示せ。(2) これを使って、理想気体では $\left(\dfrac{\partial U}{\partial V}\right)_T = 0$ となることを示せ。">
+<div class="qh"><span class="num">6-09</span><span class="kind k3">証明</span>エネルギー方程式とジュールの法則<span class="ref">マクスウェルの応用</span></div>
+<div class="stem">(1) $\left(\dfrac{\partial U}{\partial V}\right)_T = T\left(\dfrac{\partial P}{\partial T}\right)_V - P$ を示せ。(2) これを使って、理想気体では $\left(\dfrac{\partial U}{\partial V}\right)_T = 0$ となることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) dU = TdS − PdV を T 一定で dV で割り、6-06 を使う。(2) $(\partial P/\partial T)_V = nR/V$ を代入。</p><h4>解説</h4><p>(1) $dU = T\,dS - P\,dV$ を、T 一定で dV で割ると</p>
+$$\left(\frac{\partial U}{\partial V}\right)_T = T\left(\frac{\partial S}{\partial V}\right)_T - P = T\left(\frac{\partial P}{\partial T}\right)_V - P$$
+<p>(2つ目の等号はマクスウェルの関係式 6-06。)$\blacksquare$</p>
+<p>(2) 理想気体では $P = nRT/V$ なので $(\partial P/\partial T)_V = nR/V$。$T\cdot nR/V - P = P - P = 0$。$\blacksquare$</p>
+<p>ジュールの法則(2-08、実験から)が、熱力学の式から導けた。<b>マクスウェルの関係式を「使う」問題</b>として出やすい形(推測)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-10" data-kind="証明" data-star="0" data-rank="" data-copy="第6回 6-10[証明] (∂H/∂P)_T を測れる量で表す:$\left(\dfrac{\partial H}{\partial P}\right)_T = V - T\left(\dfrac{\partial V}{\partial T}\right)_P$ を示し、理想気体では 0 になることを確かめよ。">
+<div class="qh"><span class="num">6-10</span><span class="kind k3">証明</span>(∂H/∂P)_T を測れる量で表す<span class="ref">マクスウェルの応用</span></div>
+<div class="stem">$\left(\dfrac{\partial H}{\partial P}\right)_T = V - T\left(\dfrac{\partial V}{\partial T}\right)_P$ を示し、理想気体では 0 になることを確かめよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>dH = TdS + VdP を T 一定で dP で割り、6-05 を使う。</p><h4>解説</h4>$$\left(\frac{\partial H}{\partial P}\right)_T = T\left(\frac{\partial S}{\partial P}\right)_T + V = -T\left(\frac{\partial V}{\partial T}\right)_P + V\qquad\blacksquare$$
+<p>理想気体:$(\partial V/\partial T)_P = nR/P$ なので $V - T\cdot nR/P = V - V = 0$(3-10 と一致)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-11" data-kind="証明" data-star="1" data-rank="" data-copy="第6回 6-11[証明] C_P − C_V を P・V・T だけで表す:3-05 の式と 6-09 を使って、$C_P - C_V = T\left(\dfrac{\partial P}{\partial T}\right)_V\left(\dfrac{\partial V}{\partial T}\right)_P$ を示せ。">
+<div class="qh"><span class="num">6-11</span><span class="kind k3">証明</span>C_P − C_V を P・V・T だけで表す<span class="ref star">★ 2019【1】+ マクスウェル</span></div>
+<div class="stem">3-05 の式と 6-09 を使って、$C_P - C_V = T\left(\dfrac{\partial P}{\partial T}\right)_V\left(\dfrac{\partial V}{\partial T}\right)_P$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>3-05 の $(\partial U/\partial V)_T + P$ に 6-09 を入れる。</p><h4>解説</h4><p>6-09 より $(\partial U/\partial V)_T + P = T(\partial P/\partial T)_V$。3-05 の { } の中に入れると示す式。$\blacksquare$</p>
+<p>確かめ(理想気体):$T\cdot\dfrac{nR}{V}\cdot\dfrac{nR}{P} = \dfrac{(nR)^2T}{PV} = nR$。3-06 と一致。</p>
+<p>2019【1】の式を、さらに一歩進めた形。2つの単元(第3回と第6回)をつなぐ問題。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-12" data-kind="証明" data-star="0" data-rank="" data-copy="第6回 6-12[証明] 等温・定圧では dG ≤ 0(平衡条件3):閉じた系が、温度 T・圧力 P 一定のもとで変化する(PV 仕事のみ)。$TdS \geq dq$ を使って $dG \leq 0$ を示し、平衡の条件を述べよ。">
+<div class="qh"><span class="num">6-12</span><span class="kind k3">証明</span>等温・定圧では dG ≤ 0(平衡条件3)</div>
+<div class="stem">閉じた系が、温度 T・圧力 P 一定のもとで変化する(PV 仕事のみ)。$TdS \geq dq$ を使って $dG \leq 0$ を示し、平衡の条件を述べよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$dG \leq 0$。等温・定圧では G が減る向きに変化が進み、G が最小のとき平衡。</p><h4>解説</h4><p>第二法則 $T\,dS \geq dq$、第一法則 $dq = dU + P\,dV$ より $T\,dS \geq dU + P\,dV$。</p>
+<p>$dG = dU + P\,dV + V\,dP - T\,dS - S\,dT$。T、P 一定なので dT = dP = 0:</p>
+$$dG = dU + P\,dV - T\,dS \leq 0\qquad\blacksquare$$
+<p>等号は可逆(平衡)のとき。自然な変化では G が減り、G が最小になると止まる。化学反応・相変化(普通は等温・定圧)の向きを G で判断できる理由。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-13" data-kind="証明" data-star="0" data-rank="" data-copy="第6回 6-13[証明] 等温・定積では dF ≤ 0(平衡条件2):閉じた系が、温度・体積一定のもとで変化するとき、$dF \leq 0$ を示せ。">
+<div class="qh"><span class="num">6-13</span><span class="kind k3">証明</span>等温・定積では dF ≤ 0(平衡条件2)</div>
+<div class="stem">閉じた系が、温度・体積一定のもとで変化するとき、$dF \leq 0$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$dF = dU - T\,dS - S\,dT$、$T\,dS \geq dU + P\,dV$、dT = dV = 0 を使う。</p><h4>解説</h4><p>dT = 0 なので $dF = dU - T\,dS$。V 一定なので $T\,dS \geq dU + P\,dV = dU$。よって $dF = dU - T\,dS \leq 0$。$\blacksquare$</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-14" data-kind="基本" data-star="0" data-rank="" data-copy="第6回 6-14[基本] 化学ポテンシャルの定義:成分 i の化学ポテンシャル $\mu_i$ を偏微分で定義せよ。純物質では μ が何に等しいか答えよ。">
+<div class="qh"><span class="num">6-14</span><span class="kind k1">基本</span>化学ポテンシャルの定義</div>
+<div class="stem">成分 i の化学ポテンシャル $\mu_i$ を偏微分で定義せよ。純物質では μ が何に等しいか答えよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p><span class="result">$\mu_i = \left(\dfrac{\partial G}{\partial n_i}\right)_{T,P,n_j}$</span>。純物質では $\mu = G/n$(1 mol あたりのギブズエネルギー $G_m$)。</p><h4>解説</h4><p>「T、P、ほかの成分の量を一定にして、成分 i だけを少し増やしたときの G の増え方」。開いた系では $dG = -S\,dT + V\,dP + \sum\mu_i\,dn_i$。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-15" data-kind="証明" data-star="1" data-rank="A" data-copy="第6回 6-15[証明] 相平衡で μ_l = μ_g:一定温度・一定圧力の下で、水(液体)と水蒸気が共存して平衡になっている。水と水蒸気の化学ポテンシャルをそれぞれ $\mu_l$、$\mu_g$ とすると、$\mu_l = \mu_g$ となることを示せ。">
+<div class="qh"><span class="num">6-15</span><span class="pri pA" title="2019【5】(1)">優先度 A</span><span class="kind k3">証明</span>相平衡で μ_l = μ_g<span class="ref star">★ 2019【5】(1)</span></div>
+<div class="stem">一定温度・一定圧力の下で、水(液体)と水蒸気が共存して平衡になっている。水と水蒸気の化学ポテンシャルをそれぞれ $\mu_l$、$\mu_g$ とすると、$\mu_l = \mu_g$ となることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>液体 → 気体へ dn 移したときの dG = (μ_g − μ_l)dn が、平衡では 0。</p><h4>解説</h4><p>$G = n_l\mu_l + n_g\mu_g$。液体から気体へ dn mol 移ると $dn_l = -dn$、$dn_g = dn$。T、P 一定なので</p>
+$$dG = \mu_l\,dn_l + \mu_g\,dn_g = (\mu_g - \mu_l)\,dn$$
+<p>等温・定圧での平衡では G が最小で dG = 0(6-12)。dn は正でも負でもよいので、$\mu_g - \mu_l = 0$。$\blacksquare$</p>
+<p><b>書くこと</b>:①G を μ で書く ②少し移したときの dG ③平衡で dG = 0 ④結論。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-16" data-kind="説明" data-star="1" data-rank="" data-copy="第6回 6-16[説明] 2成分・3相の平衡条件:次の場合の平衡条件を、化学ポテンシャルで書け。 / (1) 氷・水・水蒸気が共存している(三重点)。 / (2) 塩化ナトリウム水溶液と水蒸気が平衡にある(NaCl は蒸発しない)。 / (3) 水とエタノールの混合溶液が、水とエタノールの混合蒸気と平衡にある。">
+<div class="qh"><span class="num">6-16</span><span class="kind k4">説明</span>2成分・3相の平衡条件<span class="ref star">★ 2019【5】(2) の類題</span></div>
+<div class="stem">次の場合の平衡条件を、化学ポテンシャルで書け。<br>(1) 氷・水・水蒸気が共存している(三重点)。<br>(2) 塩化ナトリウム水溶液と水蒸気が平衡にある(NaCl は蒸発しない)。<br>(3) 水とエタノールの混合溶液が、水とエタノールの混合蒸気と平衡にある。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) $\mu_s = \mu_l = \mu_g$ (2) $\mu_l^{\text{水}} = \mu_g^{\text{水}}$ のみ (3) $\mu_l^{W} = \mu_g^{W}$ かつ $\mu_l^{E} = \mu_g^{E}$</p><h4>解説</h4><p>ルール:<b>同じ物質</b>について、その物質が存在する<b>すべての相</b>で μ が等しい。</p>
+<p>(2) NaCl は気相にないので、NaCl についての条件は出てこない。</p>
+<p>(3) は 2019【5】(2) そのもの。違う物質どうし(μ^W と μ^E)を等しくするのは間違い。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-17" data-kind="説明" data-star="0" data-rank="" data-copy="第6回 6-17[説明] 物質は μ の高い相から低い相へ移る:液体の水の化学ポテンシャルが水蒸気より大きい($\mu_l &gt; \mu_g$)とき、等温・定圧で何が起こるか。理由とともに説明せよ。">
+<div class="qh"><span class="num">6-17</span><span class="kind k4">説明</span>物質は μ の高い相から低い相へ移る</div>
+<div class="stem">液体の水の化学ポテンシャルが水蒸気より大きい($\mu_l &gt; \mu_g$)とき、等温・定圧で何が起こるか。理由とともに説明せよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>水が蒸発する(液体 → 気体へ移る)。$\mu_l = \mu_g$ になるまで続く。</p><h4>解説</h4><p>液体から気体へ dn(> 0)移ると $dG = (\mu_g - \mu_l)dn &lt; 0$。等温・定圧では G が減る向きに自然に変化する(6-12)ので、蒸発が進む。μ は「物質が逃げ出そうとする傾向」のような量。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-18" data-kind="計算" data-star="1" data-rank="A" data-copy="第6回 6-18[計算] 等温での μ の変化:(1) 1成分の理想気体を、温度 T 一定で圧力 $P_1$ から $P_2$ まで変化させた。化学ポテンシャルの変化 Δμ を求めよ。(2) これを使って $\mu(T,P) = \mu^\circ(T) + RT\ln\dfrac{P}{P^\circ}$ を導け。">
+<div class="qh"><span class="num">6-18</span><span class="pri pA" title="2021 3Q-5(2)">優先度 A</span><span class="kind k2">計算</span>等温での μ の変化<span class="ref star">★ 2021 3Q-5(2)</span></div>
+<div class="stem">(1) 1成分の理想気体を、温度 T 一定で圧力 $P_1$ から $P_2$ まで変化させた。化学ポテンシャルの変化 Δμ を求めよ。(2) これを使って $\mu(T,P) = \mu^\circ(T) + RT\ln\dfrac{P}{P^\circ}$ を導け。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) <span class="result">$\Delta\mu = RT\ln\dfrac{P_2}{P_1}$</span> (2) P₁ = P°、P₂ = P とおく。</p><h4>解説</h4><p>(1) 1 mol で $(\partial\mu/\partial P)_T = V_m = RT/P$(6-04 を 1 mol で)。</p>
+$$\Delta\mu = \int_{P_1}^{P_2}\frac{RT}{P}dP = RT\ln\frac{P_2}{P_1}$$
+<p>(2) $P_1 = P^\circ$(標準圧力)、$P_2 = P$ とすると $\mu(T,P) - \mu(T,P^\circ) = RT\ln(P/P^\circ)$。$\mu^\circ(T) = \mu(T,P^\circ)$ と書けば示す式。$\blacksquare$</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-19" data-kind="計算" data-star="0" data-rank="" data-copy="第6回 6-19[計算] 等温圧縮の ΔG(数値):理想気体 1 mol を、298 K で 1 bar から 10 bar まで等温で圧縮した。ΔG を求めよ(R = 8.31 J/(K·mol))。">
+<div class="qh"><span class="num">6-19</span><span class="kind k2">計算</span>等温圧縮の ΔG(数値)</div>
+<div class="stem">理想気体 1 mol を、298 K で 1 bar から 10 bar まで等温で圧縮した。ΔG を求めよ(R = 8.31 J/(K·mol))。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$\Delta G \approx 5.70\ \text{kJ}$</span><h4>解説</h4><p>$\Delta G = RT\ln(P_2/P_1) = 8.31 \times 298 \times \ln 10 \approx 5702$ J。圧縮で G は増える(自然には起こらない向き)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-20" data-kind="証明" data-star="1" data-rank="A" data-copy="第6回 6-20[証明] μ から混合気体の状態方程式を出す:成分 i(物質量 $N_i$)からなる理想気体の混合物で、分圧を $p_i$ とし、$\mu_i = \mu_i^\circ(T) + RT\ln\dfrac{p_i}{p^\circ}$ とする。$p_i = x_iP$(P は全圧、$x_i$ はモル分率)を使い、この混合気体の状態方程式を求めよ。">
+<div class="qh"><span class="num">6-20</span><span class="pri pA" title="2021 4Q-6">優先度 A</span><span class="kind k3">証明</span>μ から混合気体の状態方程式を出す<span class="ref star">★ 2021 4Q-6</span></div>
+<div class="stem">成分 i(物質量 $N_i$)からなる理想気体の混合物で、分圧を $p_i$ とし、$\mu_i = \mu_i^\circ(T) + RT\ln\dfrac{p_i}{p^\circ}$ とする。$p_i = x_iP$(P は全圧、$x_i$ はモル分率)を使い、この混合気体の状態方程式を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$PV = \left(\sum_i N_i\right)RT$</span><h4>解説</h4><p>①$G = \sum_i N_i\mu_i$(G は物質量に比例する示量性の量なので、こう書ける)。②$\ln(p_i/p^\circ) = \ln x_i + \ln P - \ln p^\circ$。組成一定なら $x_i$ は一定。</p>
+<p>③$V = (\partial G/\partial P)_{T,N_i}$。P に関係するのは $\ln P$ だけ:</p>
+$$V = \sum_i N_i\cdot\frac{RT}{P}\quad\Longrightarrow\quad PV = \left(\sum_i N_i\right)RT$$
+<p><b>方針「V = (∂G/∂P)_T を使う」を思いつけるかがすべて。</b>「状態方程式 = P、V、T の関係」→「V を出したい」→「G を P で微分すれば V」。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-21" data-kind="計算" data-star="0" data-rank="B" data-copy="第6回 6-21[計算] 混合の ΔG と ΔS:温度 T、圧力 P の理想気体 1($n_1$ mol)と 2($n_2$ mol)を混合する。混合後の $\mu_i = \mu_i^* + RT\ln x_i$($\mu_i^*$ は純粋なときの μ)を使って (1) $\Delta G_{\text{mix}}$ (2) $\Delta S_{\text{mix}} = -(\partial\Delta G_{\text{mix}}/\partial T)_P$ (3) $\Delta H_{\text{mix}}$ を求めよ。">
+<div class="qh"><span class="num">6-21</span><span class="pri pB" title="5-13 の混合の ΔS を G から出す別ルート">優先度 B</span><span class="kind k2">計算</span>混合の ΔG と ΔS<span class="ref">5-13 とのつながり</span></div>
+<div class="stem">温度 T、圧力 P の理想気体 1($n_1$ mol)と 2($n_2$ mol)を混合する。混合後の $\mu_i = \mu_i^* + RT\ln x_i$($\mu_i^*$ は純粋なときの μ)を使って (1) $\Delta G_{\text{mix}}$ (2) $\Delta S_{\text{mix}} = -(\partial\Delta G_{\text{mix}}/\partial T)_P$ (3) $\Delta H_{\text{mix}}$ を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) <span class="result">$RT(n_1\ln x_1 + n_2\ln x_2)$</span> (2) <span class="result">$-R(n_1\ln x_1 + n_2\ln x_2)$</span> (3) <span class="result">0</span></p><h4>解説</h4><p>(1) 混合前 $G = n_1\mu_1^* + n_2\mu_2^*$、混合後 $G = n_1(\mu_1^* + RT\ln x_1) + n_2(\mu_2^* + RT\ln x_2)$。差をとる。</p>
+<p>(2) T で微分して符号を変える($(\partial G/\partial T)_P = -S$ の差の形)。5-13 と同じ結果。</p>
+<p>(3) $\Delta H = \Delta G + T\Delta S = 0$。理想気体の混合は熱の出入りがなく、S が増えることだけで進む。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="6-22" data-kind="証明" data-star="0" data-rank="" data-copy="第6回 6-22[証明] ギブズ・デュヘムの式:$G = \sum_i n_i\mu_i$ と、開いた系の $dG = -S\,dT + V\,dP + \sum_i\mu_i\,dn_i$ から、T、P 一定で $\sum_i n_i\,d\mu_i = 0$ となることを示せ。">
+<div class="qh"><span class="num">6-22</span><span class="kind k3">証明</span>ギブズ・デュヘムの式</div>
+<div class="stem">$G = \sum_i n_i\mu_i$ と、開いた系の $dG = -S\,dT + V\,dP + \sum_i\mu_i\,dn_i$ から、T、P 一定で $\sum_i n_i\,d\mu_i = 0$ となることを示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$G = \sum n_i\mu_i$ を全微分して、もう一方の dG と比べる。</p><h4>解説</h4><p>$dG = \sum_i(\mu_i\,dn_i + n_i\,d\mu_i)$(積の微分)。T、P 一定ではもう一方の式が $dG = \sum\mu_i\,dn_i$。差をとって $\sum n_i\,d\mu_i = 0$。$\blacksquare$</p>
+<p>意味:混合物では、ある成分の μ が上がると、ほかの成分の μ は下がる(独立には変えられない)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+</section>
+<section class="tab" id="tab-l7">
+<h1>第7回 7章 熱力学の化学への応用</h1>
+<p class="sub">14問。過去問での小問数:1</p>
+<div class="filters"><button class="on" data-f="all">すべて</button><button data-f="pA">優先度 A</button><button data-f="pAB">優先度 A+B</button><button data-f="star">★ 過去問に近い</button><button data-f="証明">証明</button><button data-f="説明">説明</button><button data-f="計算">計算</button><button data-f="基本">基本</button><button data-f="todo">未記録</button><button data-f="bad">× と △</button></div>
+<div class="q" data-id="7-01" data-kind="証明" data-star="1" data-rank="A" data-copy="第7回 7-01[証明] ギブズ・ヘルムホルツの式:$H = -T^2\left[\dfrac{\partial}{\partial T}\left(\dfrac{G}{T}\right)\right]_P$ を示せ。">
+<div class="qh"><span class="num">7-01</span><span class="pri pA" title="2019【4】(3)">優先度 A</span><span class="kind k3">証明</span>ギブズ・ヘルムホルツの式<span class="ref star">★ 2019【4】(3)</span></div>
+<div class="stem">$H = -T^2\left[\dfrac{\partial}{\partial T}\left(\dfrac{G}{T}\right)\right]_P$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>G/T を商の微分 → $(\partial G/\partial T)_P = -S$ → G + TS = H。</p><h4>解説</h4>$$\left[\frac{\partial}{\partial T}\left(\frac{G}{T}\right)\right]_P = \frac{1}{T}\left(\frac{\partial G}{\partial T}\right)_P - \frac{G}{T^2} = -\frac{S}{T} - \frac{G}{T^2} = -\frac{TS + G}{T^2} = -\frac{H}{T^2}$$
+<p>両辺に $-T^2$ をかけて示す式。$\blacksquare$</p>
+<p>使う道具は3つ:①商の微分 $(f/g)' = f'/g - fg'/g^2$(ここでは $g = T$)②$(\partial G/\partial T)_P = -S$(6-04)③$G = H - TS$。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-02" data-kind="証明" data-star="1" data-rank="" data-copy="第7回 7-02[証明] ΔG 版のギブズ・ヘルムホルツの式:化学反応の標準ギブズエネルギー変化 ΔG° と標準エンタルピー変化 ΔH° について、$\left[\dfrac{\partial}{\partial T}\left(\dfrac{\Delta G^\circ}{T}\right)\right]_P = -\dfrac{\Delta H^\circ}{T^2}$ を示せ。">
+<div class="qh"><span class="num">7-02</span><span class="kind k3">証明</span>ΔG 版のギブズ・ヘルムホルツの式<span class="ref star">★ 2019【4】(3) の変形</span></div>
+<div class="stem">化学反応の標準ギブズエネルギー変化 ΔG° と標準エンタルピー変化 ΔH° について、$\left[\dfrac{\partial}{\partial T}\left(\dfrac{\Delta G^\circ}{T}\right)\right]_P = -\dfrac{\Delta H^\circ}{T^2}$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>生成系と反応系のそれぞれに 7-01 を使い、差をとる。</p><h4>解説</h4><p>7-01 は G と H の関係で、どの物質にも成り立つ。$\Delta G^\circ = \sum\nu_iG_i^\circ$、$\Delta H^\circ = \sum\nu_iH_i^\circ$(生成系は +、反応系は − の係数)なので、各物質の式に $\nu_i$ をかけて足すと示す式。$\blacksquare$</p>
+<p>別解:$(\partial\Delta G^\circ/\partial T)_P = -\Delta S^\circ$ と $\Delta G^\circ = \Delta H^\circ - T\Delta S^\circ$ で、7-01 と同じ計算をする。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-03" data-kind="証明" data-star="0" data-rank="" data-copy="第7回 7-03[証明] ファントホッフの式:$\Delta G^\circ = -RT\ln K_P$ と 7-02 を使って、$\left(\dfrac{\partial\ln K_P}{\partial T}\right)_P = \dfrac{\Delta H^\circ}{RT^2}$ を示せ。">
+<div class="qh"><span class="num">7-03</span><span class="kind k3">証明</span>ファントホッフの式</div>
+<div class="stem">$\Delta G^\circ = -RT\ln K_P$ と 7-02 を使って、$\left(\dfrac{\partial\ln K_P}{\partial T}\right)_P = \dfrac{\Delta H^\circ}{RT^2}$ を示せ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$\ln K_P = -\Delta G^\circ/(RT)$ を T で微分し、7-02 を入れる。</p><h4>解説</h4>$$\ln K_P = -\frac{1}{R}\cdot\frac{\Delta G^\circ}{T}\quad\Longrightarrow\quad \left(\frac{\partial\ln K_P}{\partial T}\right)_P = -\frac{1}{R}\left[\frac{\partial}{\partial T}\left(\frac{\Delta G^\circ}{T}\right)\right]_P = -\frac{1}{R}\cdot\left(-\frac{\Delta H^\circ}{T^2}\right) = \frac{\Delta H^\circ}{RT^2}\qquad\blacksquare$$
+<p>講義 式(7.26)。2019 ではギブズ・ヘルムホルツの式までだったが、その「使いみち」としてここまで聞かれる可能性がある(推測)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-04" data-kind="説明" data-star="0" data-rank="" data-copy="第7回 7-04[説明] ル・シャトリエの法則を式で説明する:7-03 の式を使って、「発熱反応では温度を上げると平衡が原系側へ移る」ことを説明せよ。吸熱反応ではどうなるか。">
+<div class="qh"><span class="num">7-04</span><span class="kind k4">説明</span>ル・シャトリエの法則を式で説明する</div>
+<div class="stem">7-03 の式を使って、「発熱反応では温度を上げると平衡が原系側へ移る」ことを説明せよ。吸熱反応ではどうなるか。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><div class="result" style="display:block">$RT^2 &gt; 0$ なので、$\ln K_P$ の温度変化の符号は ΔH° の符号で決まる。発熱反応(ΔH° &lt; 0)では $(\partial\ln K_P/\partial T)_P &lt; 0$ なので、温度を上げると K_P が小さくなり、平衡は原系側へ移る。吸熱反応(ΔH° &gt; 0)では温度を上げると K_P が大きくなり、生成系側へ移る。</div><h4>解説</h4><p>講義スライドでは2つ目も「発熱反応」と書いてあったが、ΔH° > 0 は<b>吸熱</b>(第7回まとめの「気になるところ」)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-05" data-kind="証明" data-star="0" data-rank="" data-copy="第7回 7-05[証明] クラペイロンの式:純物質の液相と気相が平衡にあるとき、共存を保ったまま温度と圧力を少し変えた。$\dfrac{dP}{dT} = \dfrac{\Delta h_{\text{vap}}}{T(V_m^{(g)} - V_m^{(l)})}$ を導け($\Delta h_{\text{vap}}$ はモル蒸発熱、$V_m$ はモル体積)。">
+<div class="qh"><span class="num">7-05</span><span class="kind k3">証明</span>クラペイロンの式</div>
+<div class="stem">純物質の液相と気相が平衡にあるとき、共存を保ったまま温度と圧力を少し変えた。$\dfrac{dP}{dT} = \dfrac{\Delta h_{\text{vap}}}{T(V_m^{(g)} - V_m^{(l)})}$ を導け($\Delta h_{\text{vap}}$ はモル蒸発熱、$V_m$ はモル体積)。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>$d\mu^{(l)} = d\mu^{(g)}$ に $d\mu = -S_m\,dT + V_m\,dP$ を入れる。$\Delta S_m = \Delta h_{\text{vap}}/T$。</p><h4>解説</h4><p>共存を保つには、変化の前後で $\mu^{(l)} = \mu^{(g)}$。よって $d\mu^{(l)} = d\mu^{(g)}$。純物質では μ = G_m なので $d\mu = -S_m\,dT + V_m\,dP$(6-03 の 1 mol 版)。</p>
+$$-S_m^{(l)}dT + V_m^{(l)}dP = -S_m^{(g)}dT + V_m^{(g)}dP\ \Longrightarrow\ \frac{dP}{dT} = \frac{S_m^{(g)} - S_m^{(l)}}{V_m^{(g)} - V_m^{(l)}}$$
+<p>蒸発は平衡温度で可逆に起こるので $S_m^{(g)} - S_m^{(l)} = \Delta h_{\text{vap}}/T$(5-17 と同じ考え)。代入して示す式。$\blacksquare$</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-06" data-kind="証明" data-star="0" data-rank="B" data-copy="第7回 7-06[証明] クラウジウス・クラペイロンの式:7-05 の式から、2つの近似を使って $\dfrac{d\ln P}{dT} = \dfrac{\Delta h_{\text{vap}}}{RT^2}$ を導け。使った近似を明記すること。">
+<div class="qh"><span class="num">7-06</span><span class="pri pB" title="3年分では出ていないが、第7回の中心の式(出る保証はない)">優先度 B</span><span class="kind k3">証明</span>クラウジウス・クラペイロンの式</div>
+<div class="stem">7-05 の式から、2つの近似を使って $\dfrac{d\ln P}{dT} = \dfrac{\Delta h_{\text{vap}}}{RT^2}$ を導け。使った近似を明記すること。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>近似①液体のモル体積は気体に比べて無視できる ②気体は理想気体($V_m^{(g)} = RT/P$)。</p><h4>解説</h4><p>①より $V_m^{(g)} - V_m^{(l)} \approx V_m^{(g)}$。②より $V_m^{(g)} = RT/P$。</p>
+$$\frac{dP}{dT} = \frac{\Delta h_{\text{vap}}}{T\cdot RT/P} = \frac{P\,\Delta h_{\text{vap}}}{RT^2}\ \Longrightarrow\ \frac{1}{P}\frac{dP}{dT} = \frac{d\ln P}{dT} = \frac{\Delta h_{\text{vap}}}{RT^2}\qquad\blacksquare$$
+<p>$d\ln P = dP/P$(ln の微分)。証明問題では「どんな近似を使ったか」を必ず書く。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-07" data-kind="計算" data-star="0" data-rank="" data-copy="第7回 7-07[計算] 蒸気圧を求める:水の蒸発熱を 40.7 kJ/mol(温度によらない)、373 K での蒸気圧を 1.00 atm とする。353 K での蒸気圧を求めよ(R = 8.31 J/(K·mol))。">
+<div class="qh"><span class="num">7-07</span><span class="kind k2">計算</span>蒸気圧を求める</div>
+<div class="stem">水の蒸発熱を 40.7 kJ/mol(温度によらない)、373 K での蒸気圧を 1.00 atm とする。353 K での蒸気圧を求めよ(R = 8.31 J/(K·mol))。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">約 0.475 atm</span><h4>解説</h4><p>7-06 を $T_0$ から T まで積分:$\ln\dfrac{P}{P_0} = \dfrac{\Delta h_{\text{vap}}}{R}\left(\dfrac{1}{T_0} - \dfrac{1}{T}\right)$(式(7.11))。</p>
+<p>$\dfrac{40700}{8.31}\left(\dfrac{1}{373} - \dfrac{1}{353}\right) = 4898 \times (-1.519\times10^{-4}) \approx -0.744$。$P = e^{-0.744} \approx 0.475$ atm。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-08" data-kind="計算" data-star="0" data-rank="" data-copy="第7回 7-08[計算] 沸点を求める:7-07 と同じ条件で、外圧が 0.700 atm のとき、水の沸点は何 K か。">
+<div class="qh"><span class="num">7-08</span><span class="kind k2">計算</span>沸点を求める</div>
+<div class="stem">7-07 と同じ条件で、外圧が 0.700 atm のとき、水の沸点は何 K か。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">約 363 K</span><h4>解説</h4><p>沸点 = 蒸気圧が外圧に等しくなる温度。$\dfrac{1}{T} = \dfrac{1}{T_0} - \dfrac{R}{\Delta h_{\text{vap}}}\ln\dfrac{P}{P_0} = \dfrac{1}{373} - \dfrac{8.31}{40700}\ln 0.700$。</p>
+<p>$= 2.681\times10^{-3} + 7.28\times10^{-5} = 2.754\times10^{-3}$。T ≈ 363 K。圧力が下がると沸点も下がる(山の上)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-09" data-kind="証明" data-star="0" data-rank="B" data-copy="第7回 7-09[証明] ΔG° = −RT ln K_P を導く:理想気体の反応 $\sum_i\nu_iA_i = 0$(生成系の ν は正、反応系は負)が、温度 T・一定圧力で平衡にある。$\mu_i = \mu_i^\circ + RT\ln(P_i/P^\circ)$ を使って $\Delta G^\circ = -RT\ln K_P$ を導け。ただし $\Delta G^\circ = \sum\nu_i\mu_i^\circ$、$K_P = \prod_i(P_i/P^\circ)^{\nu_i}$。">
+<div class="qh"><span class="num">7-09</span><span class="pri pB" title="同上。導出の手順が 6-15 と同じ型">優先度 B</span><span class="kind k3">証明</span>ΔG° = −RT ln K_P を導く</div>
+<div class="stem">理想気体の反応 $\sum_i\nu_iA_i = 0$(生成系の ν は正、反応系は負)が、温度 T・一定圧力で平衡にある。$\mu_i = \mu_i^\circ + RT\ln(P_i/P^\circ)$ を使って $\Delta G^\circ = -RT\ln K_P$ を導け。ただし $\Delta G^\circ = \sum\nu_i\mu_i^\circ$、$K_P = \prod_i(P_i/P^\circ)^{\nu_i}$。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>平衡条件 $\sum\nu_i\mu_i = 0$ に μ を入れ、ln をまとめる。</p><h4>解説</h4><p>反応が dξ だけ進むと $dn_i = \nu_i\,d\xi$。T、P 一定で $dG = \sum\mu_i\,dn_i = (\sum\nu_i\mu_i)\,d\xi$。平衡では dG = 0 なので $\sum\nu_i\mu_i = 0$(式(7.16))。</p>
+$$\sum\nu_i\mu_i^\circ + RT\sum\nu_i\ln\frac{P_i}{P^\circ} = 0\ \Longrightarrow\ \Delta G^\circ + RT\ln\prod_i\left(\frac{P_i}{P^\circ}\right)^{\nu_i} = 0$$
+<p>($\nu\ln x = \ln x^\nu$、$\sum\ln = \ln\prod$。)よって $\Delta G^\circ = -RT\ln K_P$。$\blacksquare$</p>
+<p>6-15(相平衡)と同じ「G 最小 → dG = 0 → μ の条件」の流れ。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-10" data-kind="基本" data-star="0" data-rank="" data-copy="第7回 7-10[基本] 圧平衡定数を書く:$\mathrm{N_2(g) + 3H_2(g) \rightleftharpoons 2NH_3(g)}$ の圧平衡定数 $K_P$ を、分圧と標準圧力 $P^\circ$ で書け。">
+<div class="qh"><span class="num">7-10</span><span class="kind k1">基本</span>圧平衡定数を書く</div>
+<div class="stem">$\mathrm{N_2(g) + 3H_2(g) \rightleftharpoons 2NH_3(g)}$ の圧平衡定数 $K_P$ を、分圧と標準圧力 $P^\circ$ で書け。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$K_P = \dfrac{(P_{\mathrm{NH_3}}/P^\circ)^2}{(P_{\mathrm{N_2}}/P^\circ)(P_{\mathrm{H_2}}/P^\circ)^3}$</span><h4>解説</h4><p>生成系 ÷ 反応系、それぞれ係数乗。$P^\circ$ で割るので K_P は単位のない数。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-11" data-kind="計算" data-star="0" data-rank="" data-copy="第7回 7-11[計算] ΔG° から平衡定数:298 K で、7-10 の反応の ΔG° = −33.0 kJ とする。K_P を求めよ(R = 8.31 J/(K·mol))。">
+<div class="qh"><span class="num">7-11</span><span class="kind k2">計算</span>ΔG° から平衡定数</div>
+<div class="stem">298 K で、7-10 の反応の ΔG° = −33.0 kJ とする。K_P を求めよ(R = 8.31 J/(K·mol))。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">$K_P \approx 6\times10^5$</span><h4>解説</h4><p>$\ln K_P = -\Delta G^\circ/(RT) = 33000/(8.31\times298) \approx 13.3$。$K_P = e^{13.3} \approx 6.1\times10^5$。ΔG° &lt; 0 なので K_P > 1(生成系に偏る)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-12" data-kind="計算" data-star="0" data-rank="" data-copy="第7回 7-12[計算] 温度を変えたときの平衡定数:7-11 の反応の ΔH° を −92 kJ(温度によらない)とする。298 K で $K_P = 6.1\times10^5$ のとき、500 K での $K_P$ を求めよ。">
+<div class="qh"><span class="num">7-12</span><span class="kind k2">計算</span>温度を変えたときの平衡定数</div>
+<div class="stem">7-11 の反応の ΔH° を −92 kJ(温度によらない)とする。298 K で $K_P = 6.1\times10^5$ のとき、500 K での $K_P$ を求めよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><span class="result">約 0.19</span><h4>解説</h4><p>7-03 を積分:$\ln\dfrac{K_2}{K_1} = -\dfrac{\Delta H^\circ}{R}\left(\dfrac{1}{T_2} - \dfrac{1}{T_1}\right)$。</p>
+<p>$= \dfrac{92000}{8.31}\left(\dfrac{1}{500} - \dfrac{1}{298}\right) \approx 11071 \times (-1.356\times10^{-3}) \approx -15.0$。$K_2 \approx 6.1\times10^5 \times e^{-15.0} \approx 0.19$。</p>
+<p>発熱反応なので温度を上げると K_P が大きく減る(7-04)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-13" data-kind="基本" data-star="0" data-rank="" data-copy="第7回 7-13[基本] 相律:相律 $f = c - p + 2$ を使って、純粋な水について次の自由度を求め、意味を答えよ。(1) 液体だけ (2) 液体と気体が共存 (3) 固体・液体・気体が共存">
+<div class="qh"><span class="num">7-13</span><span class="kind k1">基本</span>相律</div>
+<div class="stem">相律 $f = c - p + 2$ を使って、純粋な水について次の自由度を求め、意味を答えよ。(1) 液体だけ (2) 液体と気体が共存 (3) 固体・液体・気体が共存</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>(1) f = 2 (2) f = 1 (3) f = 0</p><h4>解説</h4><p>(1) T と P を自由に選べる。(2) T を決めると P(蒸気圧)が決まる → 7-05〜7-07 の式は、この1本の線を表す。(3) T も P も1つに決まる(三重点)。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+<div class="q" data-id="7-14" data-kind="説明" data-star="0" data-rank="" data-copy="第7回 7-14[説明] ΔG° の符号と平衡:$\Delta G^\circ &lt; 0$、$\Delta G^\circ = 0$、$\Delta G^\circ &gt; 0$ のとき、K_P はそれぞれどうなり、平衡はどちらに偏るか。また、$\Delta G^\circ = \Delta H^\circ - T\Delta S^\circ$ から、温度を上げると ΔG° がどう変わるか(ΔS° &gt; 0 のとき)述べよ。">
+<div class="qh"><span class="num">7-14</span><span class="kind k4">説明</span>ΔG° の符号と平衡</div>
+<div class="stem">$\Delta G^\circ &lt; 0$、$\Delta G^\circ = 0$、$\Delta G^\circ &gt; 0$ のとき、K_P はそれぞれどうなり、平衡はどちらに偏るか。また、$\Delta G^\circ = \Delta H^\circ - T\Delta S^\circ$ から、温度を上げると ΔG° がどう変わるか(ΔS° > 0 のとき)述べよ。</div>
+<details><summary>解答・解説を見る</summary><div class="ans"><h4>解答</h4><p>ΔG° &lt; 0 → K_P > 1(生成系寄り)/ = 0 → K_P = 1 / > 0 → K_P &lt; 1(原系寄り)。ΔS° > 0 なら温度を上げると ΔG° は小さく(より負に)なる。</p><h4>解説</h4><p>$K_P = \exp(-\Delta G^\circ/RT)$(式(7.20))。指数が正なら 1 より大きい。</p>
+<p>$\Delta G^\circ = \Delta H^\circ - T\Delta S^\circ$ で $-T\Delta S^\circ$ の項は T が大きいほど負に大きくなる。章末7.1 の解答のように、「分子数が減る反応は ΔS° &lt; 0 になりやすい」も合わせて考えるとよい。</p></div></details>
+<div class="mark"><span class="ml">結果:</span><button class="mk" data-v="ok">○ 正解</button><button class="mk" data-v="meh">△ あやしい</button><button class="mk" data-v="ng">× 間違えた</button><textarea class="memo" rows="2" placeholder="どこで間違えた?(任意。コピーするときに一緒に入ります)"></textarea></div>
+</div>
+</section>
+
+<section class="tab" id="tab-miss">
+<h1>間違えた問題</h1>
+<p class="sub">× と △ を付けた問題を、まとめてコピーできます。下の「コピー」を押して、そのまま Claude に貼り付けてください。</p>
+<div class="tablewrap"><table id="stat"></table></div>
+<p><button class="btn" id="copy">コピー</button><button class="btn sec" id="incl">△ も含める:オン</button><button class="btn sec" id="reset">記録をすべて消す</button></p>
+<textarea id="out" readonly></textarea>
+<p class="sub">コピーがうまくいかないときは、上の枠の中をすべて選択してコピーしてください。</p>
+</section>
+<div id="toast"></div>
+</main>
+<script>
+(function(){
+const KEY='thermo-yosou-v1';let st={},incMeh=true;
+try{st=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){st={}}
+try{incMeh=localStorage.getItem(KEY+'-meh')!=='0'}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+const qs=[...document.querySelectorAll('.q')];
+function paint(q){const r=st[q.dataset.id]||{};q.classList.remove('st-ok','st-meh','st-ng');if(r.v)q.classList.add('st-'+r.v);
+ q.querySelectorAll('.mk').forEach(b=>b.classList.toggle('on',b.dataset.v===r.v));const m=q.querySelector('.memo');if(document.activeElement!==m)m.value=r.memo||'';}
+qs.forEach(q=>{paint(q);
+ q.querySelectorAll('.mk').forEach(b=>b.addEventListener('click',()=>{const id=q.dataset.id;const r=st[id]||{};r.v=(r.v===b.dataset.v)?undefined:b.dataset.v;r.t=Date.now();st[id]=r;save();paint(q);update();}));
+ q.querySelector('.memo').addEventListener('input',e=>{const id=q.dataset.id;const r=st[id]||{};r.memo=e.target.value;st[id]=r;save();update();});
+});
+const tabs=[...document.querySelectorAll('nav.tabs button')];
+function show(id){tabs.forEach(b=>b.classList.toggle('on',b.dataset.t===id));document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('on',s.id==='tab-'+id));
+ try{localStorage.setItem(KEY+'-tab',id)}catch(e){} try{if(location.hash!=='#'+id)history.replaceState(null,'','#'+id)}catch(e){} window.scrollTo(0,0);}
+tabs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.t)));
+let start=(location.hash||'').slice(1);if(!document.getElementById('tab-'+start)){try{start=localStorage.getItem(KEY+'-tab')||'trend'}catch(e){start='trend'}}
+if(!document.getElementById('tab-'+start))start='trend';show(start);
+document.querySelectorAll('.filters').forEach(f=>{const sec=f.closest('section');const bs=[...f.querySelectorAll('button')];
+ bs.forEach(b=>b.addEventListener('click',()=>{bs.forEach(x=>x.classList.toggle('on',x===b));apply(sec,b.dataset.f)}));});
+function apply(sec,f){sec.querySelectorAll('.q').forEach(q=>{const r=st[q.dataset.id]||{};let ok=true;
+ if(f==='pA')ok=q.dataset.rank==='A';else if(f==='pAB')ok=q.dataset.rank!=='';else if(f==='star')ok=q.dataset.star==='1';else if(f==='todo')ok=!r.v;else if(f==='bad')ok=r.v==='ng'||r.v==='meh';else if(f!=='all')ok=q.dataset.kind===f;q.style.display=ok?'':'none';});}
+function text(){const today=new Date();const d=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+ const ng=[],meh=[];qs.forEach(q=>{const r=st[q.dataset.id]||{};if(r.v==='ng')ng.push([q,r]);else if(r.v==='meh'&&incMeh)meh.push([q,r]);});
+ let done=qs.filter(q=>(st[q.dataset.id]||{}).v).length;
+ let s='【熱力 予想問題 の結果】'+d+' 記録 '+done+'/'+qs.length+'問(× '+ng.length+(incMeh?'、△ '+meh.length:'')+')\n';
+ const fmt=(mark,[q,r])=>{let t=mark+' '+q.dataset.copy;if(r.memo&&r.memo.trim())t+='\n   メモ:'+r.memo.trim();return t;};
+ if(ng.length){s+='\n■ × 間違えた\n'+ng.map(x=>fmt('×',x)).join('\n')+'\n';}
+ if(meh.length){s+='\n■ △ あやしい\n'+meh.map(x=>fmt('△',x)).join('\n')+'\n';}
+ if(!ng.length&&!meh.length)s+='\n(× と △ はまだありません)\n';
+ s+='\nこの結果をもとに、苦手なところの問題を追加で作ってください。';return s;}
+function update(){
+ tabs.forEach(b=>{const sec=document.getElementById('tab-'+b.dataset.t);const c=b.querySelector('.cnt');if(!c||!sec)return;const qq=[...sec.querySelectorAll('.q')];
+  const done=qq.filter(q=>(st[q.dataset.id]||{}).v).length;const bad=qq.filter(q=>{const v=(st[q.dataset.id]||{}).v;return v==='ng'}).length;c.textContent=done+'/'+qq.length+(bad?' ×'+bad:'');});
+ const rows=[...document.querySelectorAll('section.tab')].filter(s=>s.querySelector('.q')).map(s=>{const qq=[...s.querySelectorAll('.q')];const c={ok:0,meh:0,ng:0,none:0};
+  qq.forEach(q=>{const v=(st[q.dataset.id]||{}).v;c[v||'none']++});return '<tr><td>'+s.querySelector('h1').textContent+'</td><td>'+qq.length+'</td><td>'+c.ok+'</td><td>'+c.meh+'</td><td>'+c.ng+'</td><td>'+c.none+'</td></tr>'}).join('');
+ document.getElementById('stat').innerHTML='<tr><th>講義</th><th>問題数</th><th>○</th><th>△</th><th>×</th><th>未記録</th></tr>'+rows;
+ document.getElementById('out').value=text();
+ document.getElementById('incl').textContent='△ も含める:'+(incMeh?'オン':'オフ');}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',1800);}
+document.getElementById('copy').addEventListener('click',async()=>{const o=document.getElementById('out');o.value=text();
+ try{await navigator.clipboard.writeText(o.value);toast('コピーしました');}catch(e){o.focus();o.select();try{document.execCommand('copy');toast('コピーしました');}catch(e2){toast('枠の中を選択してコピーしてください');}}});
+document.getElementById('incl').addEventListener('click',()=>{incMeh=!incMeh;try{localStorage.setItem(KEY+'-meh',incMeh?'1':'0')}catch(e){}update();});
+document.getElementById('reset').addEventListener('click',()=>{if(confirm('○△×とメモの記録をすべて消します。よろしいですか?')){st={};save();qs.forEach(paint);update();}});
+update();
+})();
+</script>
+</body>
+</html>
